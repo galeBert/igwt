@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +10,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,99 +20,50 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { Badge } from "@/components/ui/badge";
+import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
 
 interface PackageStepProps {
   onSubmit: () => void;
   secondaryAction?: () => void;
   onCancel?: () => void;
-
-  role?: "sender" | "reciever";
 }
 
-const phoneRegex = new RegExp(
-  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
-);
-
 const FormSchema = z.object({
-  packageName: z.string(),
-  weight: z.string(),
-  height: z.string(),
-  description: z.string(),
-  imageUrl: z.string(),
+  name: z.string(),
+  weight: z.number(),
+  height: z.number(),
+  description: z.string().optional(),
 });
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-export default function PackageStep({
-  onSubmit,
-  onCancel,
-  role,
-}: PackageStepProps) {
-  const [open, setOpen] = useState({
-    province: false,
-    city: false,
-    district: false,
-    subdistrict: false,
-  });
-  const [tabs, setTabs] = useState<"user" | "address">("user");
+export default function PackageStep({ onSubmit, onCancel }: PackageStepProps) {
+  const { transaction, setTransaction } = useCreateTransactionModal();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      ...transaction.package_detail,
+    },
   });
 
-  const adressFieldList: ("province" | "city" | "district" | "subdistrict")[] =
-    ["province", "city", "district", "subdistrict"];
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    setTransaction({ package_detail: { ...form.getValues() } });
     onSubmit();
   };
   return (
     <>
       <DialogHeader>
-        <Badge className="w-fit">{role}</Badge>
+        <Badge className="w-fit">{transaction.role}</Badge>
         <DialogTitle>Package Detail</DialogTitle>
         <DialogDescription>
           can you help me describe this package data?
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
-        <form onSubmit={handleSubmit} className=" space-y-3">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className=" space-y-3">
           <FormField
             control={form.control}
-            name="packageName"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -127,11 +77,16 @@ export default function PackageStep({
           <FormField
             control={form.control}
             name="weight"
-            render={({ field }) => (
+            render={({ field: { onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel>Weight (kg)</FormLabel>
                 <FormControl>
-                  <Input placeholder="1" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="1"
+                    onChange={(e) => onChange(Number(e.currentTarget.value))}
+                    {...rest}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,11 +95,16 @@ export default function PackageStep({
           <FormField
             control={form.control}
             name="height"
-            render={({ field }) => (
+            render={({ field: { onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel>Height (cm)</FormLabel>
                 <FormControl>
-                  <Input placeholder="100" {...field} />
+                  <Input
+                    type="number"
+                    onChange={(e) => onChange(Number(e.currentTarget.value))}
+                    placeholder="100"
+                    {...rest}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -167,7 +127,12 @@ export default function PackageStep({
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <div className="w-full flex justify-end space-x-3">
+            <Button variant="secondary" onClick={onCancel}>
+              Back
+            </Button>
+            <Button type="submit">Submit</Button>
+          </div>
         </form>
       </Form>
     </>

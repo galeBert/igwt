@@ -22,8 +22,7 @@ export async function POST(req: Request, res: Response) {
     //   var encodedValue = encodeURIComponent(details[property]);
     //   formBody.push(encodedKey + "=" + encodedValue);
     // }
-    // formBody = formBody.join("&");
-    // console.log("haii");
+    // formBody = formBody.join("&")
 
     // const instance = await axios.post(
     //   "https://bigflip.id/big_sandbox_api/v3/disbursement",
@@ -37,12 +36,9 @@ export async function POST(req: Request, res: Response) {
     //     },
     //   }
     // );
-    // console.log("instance", instance);
 
     //TODO: create payment
     // const newDate = new Date();
-
-    // console.log(newDate.toISOString());
 
     // let details: any = {
     //   account_number: "1122333300",
@@ -86,8 +82,6 @@ export async function POST(req: Request, res: Response) {
     //   }
     // );
 
-    // console.log(response.data);
-
     //TODO: create bill
     const newDate = new Date();
 
@@ -127,8 +121,6 @@ export async function POST(req: Request, res: Response) {
       }
     );
 
-    console.log(response.data);
-
     return NextResponse.json(response.data);
   } catch (error) {
     console.log("error", error);
@@ -139,12 +131,17 @@ export async function POST(req: Request, res: Response) {
 
 export async function GET(req: Request, res: Response) {
   try {
-    // const querySnapshot = await getDocs(collection(db, "users"));
+    const data = await axios.get(
+      "https://api.biteship.com/v1/maps/areas?countries=ID",
+      {
+        headers: {
+          Authorization:
+            "biteship_test.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdCBrdXJpciIsInVzZXJJZCI6IjY1MDNmZDNiMWI2NDI1MWNiOWQ5NmU4NiIsImlhdCI6MTY5NTkzMzYzOX0.sAGBBCynEHDzw1flpZFy7vsvFwg5jtIW_EIE-zdGmFs",
+        },
+      }
+    );
 
-    // querySnapshot.forEach((doc) => {
-    //   console.log(`${doc.id} => ${doc.data()}`);
-    // });
-    return NextResponse.json("hi");
+    return NextResponse.json(data.data);
   } catch (error) {
     return NextResponse.json(error);
   }

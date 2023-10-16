@@ -1,3 +1,4 @@
+import { AddressData } from "@/components/form/address-form";
 import { Button } from "@/components/ui/button";
 import {
   DialogDescription,
@@ -15,14 +16,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
+import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 interface RoleStepProps {
-  role?: string;
-  setRole: (role?: "sender" | "reciever") => void;
+  fUserData: AddressData;
 }
 
 const FormSchema = z.object({
@@ -32,15 +34,25 @@ const FormSchema = z.object({
   link: z.string().optional(),
 });
 
-export function RoleStep({ role, setRole }: RoleStepProps) {
+export function RoleStep({ fUserData }: RoleStepProps) {
+  const { user } = useUser();
+  const { setTransaction, transaction } = useCreateTransactionModal();
+  const { role } = transaction;
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: { role, link: "" },
   });
 
   const roles = form.watch("role");
+  const link = form.watch("link");
   const handleSubmit = () => {
-    setRole(roles);
+    setTransaction({
+      [roles]: { ...fUserData, name: user?.firstName },
+      role: roles,
+      link,
+    });
   };
+
   return (
     <>
       <DialogHeader>

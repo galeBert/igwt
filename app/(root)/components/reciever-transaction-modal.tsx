@@ -6,13 +6,13 @@ import SummaryStep from "./transaction-step/summary-step";
 
 enum RECIEVER_STEPS {
   CONTACT = 0,
-  FORM = 1,
-  BANK = 2,
-  SUMMARY = 3,
+  BANK = 1,
+  SUMMARY = 2,
 }
 
 interface RecieverCreateTransactionModalProps {
   role?: "sender" | "reciever";
+  openForm: () => void;
 }
 export default function RecieverCreateTransactionModal({
   role,
@@ -32,14 +32,6 @@ export default function RecieverCreateTransactionModal({
   const renderContent = () => {
     switch (step) {
       case RECIEVER_STEPS.CONTACT:
-        return (
-          <ContactStep
-            role={role}
-            onSubmit={onNext}
-            secondaryAction={onContactSecondaryAction}
-          />
-        );
-      case RECIEVER_STEPS.FORM:
         return (
           <ContactStep
             role={role}

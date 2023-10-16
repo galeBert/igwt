@@ -1,3 +1,4 @@
+import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
 import React, { useState } from "react";
 
 import ContactStep from "./transaction-step/contact-step";
@@ -7,19 +8,21 @@ import SummaryStep from "./transaction-step/summary-step";
 
 enum SENDER_STEPS {
   CONTACT = 0,
-  FORM = 1,
-  PACKAGE = 2,
-  PAYMENT = 3,
-  SUMMARY = 4,
+  PACKAGE = 1,
+  PAYMENT = 2,
+  SUMMARY = 3,
 }
 
 interface SenderCreateTransactionModal {
   role?: "sender" | "reciever";
+  openForm: () => void;
 }
 export default function SenderCreateTransactionModal({
-  role,
+  openForm,
 }: SenderCreateTransactionModal) {
+  const { setTransaction } = useCreateTransactionModal();
   const [step, setStep] = useState(SENDER_STEPS.CONTACT);
+
   const onBack = () => {
     setStep((value) => value - 1);
   };
@@ -27,36 +30,23 @@ export default function SenderCreateTransactionModal({
   const onNext = () => {
     setStep((value) => value + 1);
   };
-  const onContactSecondaryAction = () => {
-    setStep((value) => value + 2);
-  };
 
   const renderContent = () => {
     switch (step) {
       case SENDER_STEPS.CONTACT:
         return (
           <ContactStep
-            role={role}
-            onSubmit={onNext}
-            secondaryAction={onContactSecondaryAction}
-          />
-        );
-      case SENDER_STEPS.FORM:
-        return (
-          <ContactStep
-            role={role}
-            onSubmit={onNext}
-            secondaryAction={onContactSecondaryAction}
+            onCancel={() => setTransaction({ role: undefined })}
+            onSubmit={openForm}
+            secondaryAction={onNext}
           />
         );
       case SENDER_STEPS.PACKAGE:
-        return <PackageStep role={role} onSubmit={onNext} onCancel={onBack} />;
+        return <PackageStep onSubmit={onNext} onCancel={onBack} />;
       case SENDER_STEPS.PAYMENT:
-        return (
-          <PaymentAmmount role={role} onSubmit={onNext} onCancel={onBack} />
-        );
+        return <PaymentAmmount onSubmit={onNext} onCancel={onBack} />;
       case SENDER_STEPS.SUMMARY:
-        return <SummaryStep />;
+        return <SummaryStep onSubmit={onNext} onCancel={onBack} />;
 
       default:
         return null;

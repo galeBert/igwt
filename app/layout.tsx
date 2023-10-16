@@ -4,6 +4,8 @@ import { Montserrat } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import Modal from "@/components/ui/modal";
+import AddContactModal from "@/providers/add-contact-provider";
 
 const inter = Montserrat({ subsets: ["latin"] });
 
@@ -24,6 +26,7 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system">
             {children}
             <Toaster />
+            <AddContactModal />
           </ThemeProvider>
         </body>
       </html>

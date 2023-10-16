@@ -15,13 +15,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 interface BankStepProps {
-  role?: "sender" | "reciever";
   onSubmit: () => void;
   onCancel: () => void;
   secondaryAction?: () => void;
@@ -41,25 +41,18 @@ const FormSchema = z.object({
 export default function PaymentAmmount({
   onSubmit,
   secondaryAction,
+  onCancel,
 }: BankStepProps) {
+  const { setTransaction, transaction } = useCreateTransactionModal();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: { ammount: transaction.price ?? 0 },
   });
 
-  const onSubmitForm = (data: z.infer<typeof FormSchema>) => {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  };
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const ammount = form.watch("ammount");
 
-    form.handleSubmit(onSubmitForm);
+  const handleSubmit = () => {
+    setTransaction({ price: ammount });
     onSubmit();
   };
   return (
@@ -70,15 +63,20 @@ export default function PaymentAmmount({
       </DialogHeader>
 
       <Form {...form}>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="ammount"
-            render={({ field }) => (
+            render={({ field: { onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel>Ammount</FormLabel>
                 <FormControl>
-                  <Input placeholder="Rp. 9.999.999" {...field} />
+                  <Input
+                    type="number"
+                    placeholder="Rp. 9.999.999"
+                    onChange={(e) => onChange(Number(e.currentTarget.value))}
+                    {...rest}
+                  />
                 </FormControl>
                 <FormDescription>
                   This ammount is exlude shipping
@@ -87,7 +85,10 @@ export default function PaymentAmmount({
               </FormItem>
             )}
           />
-          <div className="w-full flex justify-end">
+          <div className="w-full flex space-x-3 justify-end">
+            <Button onClick={onCancel} variant="secondary">
+              Back
+            </Button>
             <Button type="submit">Submit</Button>
           </div>
         </form>
