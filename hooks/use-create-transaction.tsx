@@ -1,4 +1,5 @@
 import { AddressData } from "@/components/form/address-form";
+import { ShippingAddressData, ShippingPriceListData } from "@/lib/types";
 import { create } from "zustand";
 
 interface useCreateTransactionStore {
@@ -22,8 +23,13 @@ export type TTransactionData = {
   price?: number;
   total_price?: number;
   shipping?: {
-    shipping_price?: number;
-    shipping_type?: string;
+    success: boolean;
+    object: string;
+    message: string;
+    code: number;
+    origin: ShippingAddressData;
+    destination: ShippingAddressData;
+    pricing: ShippingPriceListData[];
   };
   bank?: string;
   status?: string;
@@ -33,6 +39,7 @@ export type TTransactionData = {
     weight: number;
     description?: string;
   };
+  userId?: string;
 };
 
 export const useCreateTransactionModal = create<useCreateTransactionStore>(

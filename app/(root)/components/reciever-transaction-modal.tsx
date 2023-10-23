@@ -34,17 +34,15 @@ export default function RecieverCreateTransactionModal({
       case RECIEVER_STEPS.CONTACT:
         return (
           <ContactStep
-            role={role}
+            onCancel={() => {}}
             onSubmit={onNext}
             secondaryAction={onContactSecondaryAction}
           />
         );
       case RECIEVER_STEPS.BANK:
-        return (
-          <PaymentAmmount role={role} onSubmit={onNext} onCancel={onBack} />
-        );
+        return <PaymentAmmount onSubmit={onNext} onCancel={onBack} />;
       case RECIEVER_STEPS.SUMMARY:
-        return <SummaryStep />;
+        return <SummaryStep onSubmit={onNext} onCancel={onBack} />;
 
       default:
         return null;

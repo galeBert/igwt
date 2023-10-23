@@ -63,6 +63,7 @@ export type AddressData = {
   street_name?: string;
   description?: string;
   formatted_address?: string;
+  address_id?: string;
 };
 interface ProfileCardProps {
   data?: AddressData;
