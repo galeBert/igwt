@@ -9,20 +9,16 @@ export async function GET(
   { params }: { params: { transactionId: string } }
 ) {
   try {
+    if (!params.transactionId) {
+      return new NextResponse("transaction id is required", { status: 400 });
+    }
     const transactionRef = doc(db, "transactions", params.transactionId);
 
     const singleTransaction = await getDoc(transactionRef);
-
     if (singleTransaction.exists()) {
-      const test: any = {
-        ...singleTransaction.data(),
-        id: singleTransaction.id,
-      };
-      if (typeof test === undefined) {
-        return NextResponse.json(null);
-      }
-      return NextResponse.json(test);
+      return NextResponse.json(singleTransaction.data());
     }
+    return NextResponse.json(null);
   } catch (error) {
     console.log(error);
   }
