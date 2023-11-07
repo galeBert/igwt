@@ -11,7 +11,7 @@ import ProfileInfo from "./components/profile-info";
 export default async function page() {
   const userData = await currentUser();
   const fUserData = await getUserData(userData?.id ?? "");
-
+fUserData.street_name
   const translatedUserData: User = JSON.parse(JSON.stringify(userData));
 
   return (

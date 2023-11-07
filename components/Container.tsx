@@ -17,8 +17,11 @@ export default function Container({ children }: ContainerProps) {
   if (!mounted) {
     return null;
   }
+  const pathname = window.location.pathname.split("/");
+  const isSingleTransactionPage =
+    pathname?.[1] === "transactions" && pathname.length > 2;
 
-  if (!isSignedIn && isLoaded) {
+  if (!isSignedIn && isLoaded && !isSingleTransactionPage) {
     return redirect("/sign-in");
   }
   return <main className="container dark:bg-gray-950">{children}</main>;

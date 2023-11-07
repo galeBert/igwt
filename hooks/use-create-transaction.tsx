@@ -22,6 +22,21 @@ export type TTransactionData = {
   reciever?: UserData;
   price?: number;
   total_price?: number;
+  payment?: {
+    expired_date: string;
+    amount: number;
+    link_id: number;
+    bill_payment: {
+      amount: number;
+      sender_bank: string;
+
+      receiver_bank_account: {
+        account_number: number;
+      };
+      status: string;
+    };
+    status: string;
+  };
   shipping?: {
     success: boolean;
     object: string;
@@ -31,6 +46,7 @@ export type TTransactionData = {
     destination: ShippingAddressData;
     pricing: ShippingPriceListData[];
   };
+  selectedShipper?: ShippingPriceListData;
   bank?: string;
   status?: string;
   package_detail?: {

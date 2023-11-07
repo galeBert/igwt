@@ -9,21 +9,18 @@ export async function PATCH(
 ) {
   try {
     const { userId } = auth();
-    console.log("aaaa");
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
     const body = await req.json();
-    console.log("vbbbbb");
 
     const { transactionId, ...rest } = body;
-    console.log(transactionId, rest);
 
     const transactionRef = doc(db, "transactions", transactionId);
 
     await updateDoc(transactionRef, rest);
-    return NextResponse.json({ hello: "word" });
+    return NextResponse.json(rest);
   } catch (error: any) {
     console.log(error);
   }

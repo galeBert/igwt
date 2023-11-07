@@ -7,12 +7,8 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "./components/sidebar";
 
 export default async function layout({ children }: { children: ReactNode }) {
-  const { userId } = auth();
   const userData = await currentUser();
 
-  if (!userId) {
-    redirect("/sign-in");
-  }
   const translatedUserData = JSON.parse(JSON.stringify(userData));
 
   return (

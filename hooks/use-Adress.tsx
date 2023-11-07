@@ -20,6 +20,7 @@ export const useAdress = ({
   const [district, setDistrict] = useState<TAddress[]>([]);
   const [subdistrict, setSubdistrict] = useState<TAddress[]>([]);
   const [postalCode, setPostalCode] = useState<TAddress[]>([]);
+
   useEffect(() => {
     (async () => {
       const province = await axios.get(`${url}/provinsi/get/`);
