@@ -10,16 +10,18 @@ export async function GET(
 ) {
   try {
     const transactionRef = doc(db, "transactions", params.transactionId);
-    // const ref = doc(db, "cities", "LA").withConverter(cityConverter);
+
     const singleTransaction = await getDoc(transactionRef);
+
     if (singleTransaction.exists()) {
       const test: any = {
-        ...(singleTransaction.data() ?? { hello: "world" }),
+        ...singleTransaction.data(),
         id: singleTransaction.id,
       };
+
       return NextResponse.json(test);
     }
-    return NextResponse.json(null);
+    throw new Error("transactionId not found");
   } catch (error) {
     console.log(error);
   }
