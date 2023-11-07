@@ -25,7 +25,10 @@ export async function GET(
     }
     return NextResponse.json(null);
   } catch (error) {
-    console.log(error);
+    return NextResponse.json(
+      { error: "Ouch, GET is not working my friend" },
+      { status: 500 }
+    );
   }
 }
 
