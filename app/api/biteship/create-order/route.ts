@@ -63,7 +63,7 @@ export async function POST(req: Request, res: Response) {
       tracking_id: order.data.courier.tracking_id,
       ...orderTrack.data,
     });
-  } catch (error) {
-    throw new Error(error);
+  } catch (error: any) {
+    throw new Error("BITESHIP_CREATE_ORDER", error);
   }
 }

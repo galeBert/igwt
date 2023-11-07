@@ -37,6 +37,6 @@ export async function POST(req: Request, res: Response) {
     );
     return NextResponse.json(rates.data);
   } catch (error) {
-    throw new Error(error);
+    throw new Error("BITESHIP_COURIER_RATE_ERROR", error);
   }
 }
