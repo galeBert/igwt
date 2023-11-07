@@ -19,7 +19,9 @@ export async function GET(
       if (singleTransaction.data() === undefined) {
         return NextResponse.json(null);
       }
-      return NextResponse.json(singleTransaction.data());
+      return NextResponse.json(
+        singleTransaction.data() === undefined ? null : singleTransaction.data()
+      );
     }
     return NextResponse.json(null);
   } catch (error) {
