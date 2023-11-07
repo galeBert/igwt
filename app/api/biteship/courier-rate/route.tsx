@@ -20,7 +20,6 @@ export async function POST(req: Request, res: Response) {
   try {
     const body = await req.json();
     const { origin_area_id, destination_area_id, items } = body;
-    console.log("req", req);
 
     const rates = await axios.post(
       "https://api.biteship.com/v1/rates/couriers",
@@ -38,6 +37,6 @@ export async function POST(req: Request, res: Response) {
     );
     return NextResponse.json(rates.data);
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 }
