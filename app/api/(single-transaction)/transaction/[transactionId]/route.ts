@@ -13,14 +13,11 @@ export async function GET(
     // const ref = doc(db, "cities", "LA").withConverter(cityConverter);
     const singleTransaction = await getDoc(transactionRef);
     if (singleTransaction.exists()) {
-      //   // Convert to City object
-      //   const city = docSnap.data();
-      //   // Use a City instance method
-      //   console.log(city.toString());
-      return NextResponse.json({
-        ...singleTransaction.data(),
+      const test: any = {
+        ...(singleTransaction.data() ?? { hello: "world" }),
         id: singleTransaction.id,
-      });
+      };
+      return NextResponse.json(test);
     }
     return NextResponse.json(null);
   } catch (error) {
