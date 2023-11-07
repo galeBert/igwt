@@ -21,9 +21,8 @@ export async function GET(
         ...singleTransaction.data(),
         id: singleTransaction.id,
       });
-    } else {
-      return NextResponse.json(null);
     }
+    return NextResponse.json(null);
   } catch (error) {
     console.log(error);
   }
