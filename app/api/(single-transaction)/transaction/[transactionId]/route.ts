@@ -16,6 +16,9 @@ export async function GET(
 
     const singleTransaction = await getDoc(transactionRef);
     if (singleTransaction.exists()) {
+      if (singleTransaction.data() === undefined) {
+        return NextResponse.json(null);
+      }
       return NextResponse.json(singleTransaction.data());
     }
     return NextResponse.json(null);
