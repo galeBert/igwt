@@ -15,14 +15,14 @@ export async function POST(
     }
     const body = await req.json();
 
-    await addDoc(collection(db, `transactions`), {
+    const data = {
       ...body,
       userId,
       createdAt: Date.now(),
-    });
-
-    return NextResponse.json({ hello: "word" });
+    };
+    const newDoc = await addDoc(collection(db, `transactions`), data);
+    return NextResponse.json({ id: newDoc.id, ...data });
   } catch (error: any) {
-    console.log(error);
+    return NextResponse.json({ error }, { status: 500 });
   }
 }
