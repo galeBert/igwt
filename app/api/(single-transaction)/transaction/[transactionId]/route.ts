@@ -20,10 +20,7 @@ export async function GET(
     }
     return NextResponse.json(null);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Ouch, GET is not working my friend" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error }, { status: 500 });
   }
 }
 
@@ -46,6 +43,6 @@ export async function PATCH(
     await updateDoc(transactionRef, rest);
     return NextResponse.json(rest);
   } catch (error: any) {
-    console.log(error);
+    return NextResponse.json({ error }, { status: 500 });
   }
 }
