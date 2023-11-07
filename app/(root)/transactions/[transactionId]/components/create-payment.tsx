@@ -28,6 +28,7 @@ import { bankList } from "@/lib/bank-list";
 import { oneHourfromNowFlipFormat } from "@/lib/helpers";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
+import { Loader, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
@@ -37,9 +38,11 @@ interface CreatePaymentProps {
 }
 
 export default function CreatePayment({ transactionId }: CreatePaymentProps) {
-  const { data, error, isLoading, mutate } = useSWR(`single-transaction`, () =>
+  const { data, error, mutate } = useSWR(`single-transaction`, () =>
     getTransaction(transactionId)
   );
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [bank, setBank] = useState("");
   const [link, setLink] = useState("");
   const { user } = useUser();
@@ -47,12 +50,13 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
   const totalPrice = data?.selectedShipper?.price ?? 0 + (data?.price ?? 0);
 
   const handleClick = async () => {
+    setLoading(true);
     if (transactionId) {
       await createPaymentGateway({
-        amount: 10002,
-        bank: "bca",
-        name: "abert",
-        title: "jual sapi",
+        amount: data?.price ?? 0,
+        bank,
+        name: data?.reciever?.name ?? "",
+        title: data?.package_detail?.name ?? "",
         transactionId,
       });
 
@@ -61,12 +65,14 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
         description: `selected payment to bca `,
         status: "waiting payment to complete",
       });
+      setOpen(false);
       mutate();
+      setLoading(false);
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary">Set Payment</Button>
       </DialogTrigger>
@@ -136,7 +142,16 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
                 <Label>Rp.{totalPrice}</Label>
               </div>
             </div>
-            <Button onClick={handleClick}>Generate Virtual Account</Button>
+            <Button className="w-full" disabled={loading} onClick={handleClick}>
+              {loading ? (
+                <div className="flex justify-center items-center w-full space-x-2">
+                  <Loader2 className="w-5 animate-spin" />
+                  <span>loading...</span>
+                </div>
+              ) : (
+                "Generate Virtual Account"
+              )}
+            </Button>
           </CardContent>
         </Card>
       </DialogContent>

@@ -45,6 +45,7 @@ export type TTransactionData = {
     origin: ShippingAddressData;
     destination: ShippingAddressData;
     pricing: ShippingPriceListData[];
+    shipping_type?: string;
   };
   selectedShipper?: ShippingPriceListData;
   bank?: string;

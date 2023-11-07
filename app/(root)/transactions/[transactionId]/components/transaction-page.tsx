@@ -29,8 +29,6 @@ interface ITransactionLog extends GetTransactionLogProps {
 export default function TransactionPage() {
   const { transactionId }: { transactionId: string } = useParams();
   const [log, setLog] = useState<ITransactionLog[]>([]);
-  const test = "picking_up";
-  console.log(test.split("_"), test.split("_").join(" "));
 
   useEffect(() => {
     const q = query(
@@ -43,7 +41,6 @@ export default function TransactionPage() {
           ...doc.data(),
           id: doc.id,
         } as unknown as ITransactionLog;
-        console.log(doc.exists(), doc.metadata);
 
         setLog((prev) => {
           return removeDuplicateObjectFromArray([data, ...prev], "id");
@@ -58,10 +55,6 @@ export default function TransactionPage() {
       method: "POST",
     });
   };
-  //   const test = console.log(
-  //     new Date(data?.[0].createdAt.seconds + data?.[0].createdAt.nanoseconds)
-  //   );
-
   return (
     <div>
       <Button onClick={handleTransaction}>AddData</Button>

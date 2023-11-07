@@ -10,6 +10,7 @@ import useSWR from "swr";
 import Countdown from "react-countdown";
 import moment from "moment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import clsx from "clsx";
 
 export default function InfoPage({ transactionId }: { transactionId: string }) {
   const {
@@ -25,6 +26,20 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
   };
   const momentObject = moment(datas?.payment?.expired_date);
   const unixTimestamp = momentObject.valueOf();
+  const [start, setStart] = useState(false);
+  useEffect(() => {
+    if (datas?.payment) {
+      setStart(true);
+    }
+  }, [datas?.payment]);
+
+  useEffect(() => {
+    if (start) {
+      setTimeout(() => {
+        setStart(false);
+      }, 1000);
+    }
+  }, [start]);
 
   return (
     <Card className="w-full">
@@ -32,7 +47,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
         <CardTitle>Info</CardTitle>
       </CardHeader>
       <CardContent className="flex space-y-3 w-full flex-col">
-        <Alert>
+        {/* <Alert>
           <Plane className="h-4 w-4" />
           <AlertTitle className="flex items-center gap-x-2">
             Nomor resi
@@ -45,72 +60,83 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
               <Copy className="h-4 w-4" />
             </Button>
           </AlertDescription>
-        </Alert>
-        <Alert>
-          <Plane className="h-4 w-4" />
-          <div className="flex  justify-between">
-            <div className="flex space-x-2 w-full">
-              <AlertTitle className="flex items-center gap-x-2">
-                VA Number
-              </AlertTitle>
-
-              {datas?.payment?.bill_payment.status === "SUCCESSFUL" ? (
-                <Badge className="bg-green-400 py-0">Paid</Badge>
-              ) : (
-                <Countdown
-                  autoStart
-                  date={new Date(unixTimestamp)}
-                  renderer={(count) => {
-                    setTimeout(() => {
-                      count.api.start();
-                    }, 100);
-                    return (
-                      <div className="flex space-x-2">
-                        <Badge className="bg-yellow-300">
-                          {datas?.payment?.status.toLowerCase()}
-                        </Badge>
-                        <Badge color="red">
-                          {count.hours}:{count.minutes}:{count.seconds}
-                        </Badge>
-                      </div>
-                    );
-                  }}
-                >
-                  <Badge className="bg-red-300">expired</Badge>
-                </Countdown>
-              )}
-            </div>
-            <Button onClick={() => mutate()} variant="outline" size="sm">
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <AlertDescription>
-            {datas?.payment?.bill_payment.sender_bank.toUpperCase()}
-          </AlertDescription>
-          <AlertDescription className="mt-4 flex items-center space-x-2 justify-between">
-            <code className="relative w-full rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+        </Alert> */}
+        <button onClick={() => setStart(!start)}>start</button>
+        {datas?.payment ? (
+          <Alert
+            className={clsx(
+              "transition-all relative   duration-500 !-translate-y-100",
               {
-                datas?.payment?.bill_payment.receiver_bank_account
-                  .account_number
+                "shadow-blue-400  ring-4 border-solid  ring-blue-400  translate-y-0  shadow-lg":
+                  start,
               }
-            </code>
-            <Button
-              onClick={() =>
-                onCopy(
-                  String(
-                    datas?.payment?.bill_payment.receiver_bank_account
-                      .account_number
-                  ) ?? ""
-                )
-              }
-              variant="outline"
-              size="sm"
-            >
-              <Copy className="h-4 w-4" />
-            </Button>
-          </AlertDescription>
-        </Alert>
+            )}
+          >
+            <Plane className="h-4 w-4" />
+            <div className="flex  justify-between">
+              <div className="flex space-x-2 w-full">
+                <AlertTitle className="flex items-center gap-x-2">
+                  VA Number
+                </AlertTitle>
+
+                {datas?.payment?.bill_payment.status === "SUCCESSFUL" ? (
+                  <Badge className="bg-green-400 py-0">Paid</Badge>
+                ) : (
+                  <Countdown
+                    autoStart
+                    date={new Date(unixTimestamp)}
+                    renderer={(count) => {
+                      setTimeout(() => {
+                        count.api.start();
+                      }, 100);
+                      return (
+                        <div className="flex space-x-2">
+                          <Badge className="bg-yellow-300">
+                            {datas?.payment?.status.toLowerCase()}
+                          </Badge>
+                          <Badge color="red">
+                            {count.hours}:{count.minutes}:{count.seconds}
+                          </Badge>
+                        </div>
+                      );
+                    }}
+                  >
+                    <Badge className="bg-red-300">expired</Badge>
+                  </Countdown>
+                )}
+              </div>
+              <Button onClick={() => mutate()} variant="outline" size="sm">
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <AlertDescription>
+              {datas?.payment?.bill_payment.sender_bank.toUpperCase()}
+            </AlertDescription>
+            <AlertDescription className="mt-4 flex items-center space-x-2 justify-between">
+              <code className="relative w-full rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                {
+                  datas?.payment?.bill_payment.receiver_bank_account
+                    .account_number
+                }
+              </code>
+              <Button
+                onClick={() =>
+                  onCopy(
+                    String(
+                      datas?.payment?.bill_payment.receiver_bank_account
+                        .account_number
+                    ) ?? ""
+                  )
+                }
+                variant="outline"
+                size="sm"
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </AlertDescription>
+          </Alert>
+        ) : null}
       </CardContent>
     </Card>
   );
