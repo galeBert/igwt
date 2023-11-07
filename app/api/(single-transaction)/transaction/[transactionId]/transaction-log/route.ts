@@ -49,7 +49,6 @@ export async function GET(
   req: Request,
   { params }: { params: { transactionId: string } }
 ) {
-  // const { userId } = params;
   try {
     console.log(params.transactionId);
     const ref = collection(
@@ -64,23 +63,9 @@ export async function GET(
       data.push(doc.data());
     });
 
-    return NextResponse.json(data);
-    // if (!userId) {
-    //   return new NextResponse("User id is required", { status: 400 });
-    // }
-
-    // const q = query(collection(db, `transaction/${userId}/contact`));
-
-    // const querySnapshot = await getDocs(q);
-
-    // let test: DocumentData[] = [];
-
-    // querySnapshot.forEach((doc) => {
-    //   // doc.data() is never undefined for query doc snapshots
-    //   // console.log(doc.id, " => ", doc.data());
-    //   test.push({ ...doc.data(), id: doc.id });
-    // });
-
+    if (data) {
+      return NextResponse.json(data);
+    }
     return NextResponse.json(null);
   } catch (error) {
     return NextResponse.json(error);
