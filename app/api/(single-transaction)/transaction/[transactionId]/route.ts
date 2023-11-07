@@ -22,7 +22,7 @@ export async function GET(
         id: singleTransaction.id,
       });
     } else {
-      return null;
+      return NextResponse.json(null);
     }
   } catch (error) {
     console.log(error);
