@@ -22,6 +22,6 @@ export async function PATCH(
     await updateDoc(transactionRef, rest);
     return NextResponse.json(rest);
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error("TRANSACTION_ERROR", error);
   }
 }
