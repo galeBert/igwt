@@ -18,10 +18,11 @@ export async function GET(
         ...singleTransaction.data(),
         id: singleTransaction.id,
       };
-
+      if (typeof test === undefined) {
+        return NextResponse.json(null);
+      }
       return NextResponse.json(test);
     }
-    throw new Error("transactionId not found");
   } catch (error) {
     console.log(error);
   }
