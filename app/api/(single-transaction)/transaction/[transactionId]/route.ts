@@ -14,14 +14,9 @@ export async function GET(
     }
     const transactionRef = doc(db, "transactions", params.transactionId);
 
-    const singleTransaction = await getDoc(transactionRef);
-    if (singleTransaction.exists()) {
-      if (singleTransaction.data() === undefined) {
-        return NextResponse.json(null);
-      }
-      return NextResponse.json(
-        singleTransaction.data() === undefined ? null : singleTransaction.data()
-      );
+    const singleTransaction = await (await getDoc(transactionRef)).data();
+    if (singleTransaction) {
+      return NextResponse.json(singleTransaction);
     }
     return NextResponse.json(null);
   } catch (error) {
