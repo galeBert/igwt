@@ -21,6 +21,6 @@ export async function GET(
 
     return NextResponse.json(transactions);
   } catch (error: any) {
-    console.log(error);
+    throw new Error(error);
   }
 }

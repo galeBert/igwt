@@ -64,6 +64,6 @@ export async function POST(req: Request, res: Response) {
       ...orderTrack.data,
     });
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 }
