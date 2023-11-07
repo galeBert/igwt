@@ -101,7 +101,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
                       );
                     }}
                   >
-                    <Badge className="bg-red-300">expired</Badge>
+                    <Badge className="bg-red-300">Expired</Badge>
                   </Countdown>
                 )}
               </div>
