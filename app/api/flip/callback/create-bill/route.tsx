@@ -54,6 +54,7 @@ export async function POST(req: Request, res: Response) {
               status: data.status,
             },
           },
+          status: data.status === "SUCCESSFUL" ? "002" : "022",
         };
 
         await updateDoc(washingtonRef, newData);
@@ -65,13 +66,6 @@ export async function POST(req: Request, res: Response) {
               role: "reciever",
               description: `payment paid`,
               status: "complete",
-            }
-          );
-          await axios.patch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${selectedTransaction?.fBaseId}`,
-            {
-              transactionId: selectedTransaction?.fBaseId,
-              status: "002",
             }
           );
         } else {
