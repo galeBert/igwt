@@ -22,7 +22,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import validator from "validator";
 
 import AddressForm, { AddressData } from "@/components/form/address-form";
 import axios from "axios";
@@ -40,29 +39,11 @@ const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
 
-// const FormSchema = z.object({
-//   username: z.string().min(2, {
-//     message: "Username must be at least 2 characters.",
-//   }),
-//   email: z.string().email().optional(),
-//   phoneNumber: z
-//     .string()
-//     .regex(phoneRegex, "Invalid Number2!")
-//     .refine(validator.isMobilePhone),
-//   province: z.string(),
-//   city: z.string(),
-//   district: z.string(),
-//   subdistrict: z.string(),
-//   streetName: z.string(),
-//   description: z.string().optional(),
-// });
-
 const FormSchemaUser = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  // email: z.string().email().optional(),
-  phoneNumber: z.string().optional(),
+  email: z.string().email(),
   // .regex(phoneRegex, "Invalid Number!")
   // .refine(validator.isMobilePhone)
 });
@@ -71,12 +52,12 @@ export default function FormStep({ onSubmit, onCancel }: FormStepProps) {
   const { user } = useUser();
   const [tabs, setTabs] = useState<"user" | "address">("user");
   const [address, setAddress] = useState<AddressData>();
-
+  const [loading, setLoading] = useState(false);
   const formUser = useForm<z.infer<typeof FormSchemaUser>>({
     resolver: zodResolver(FormSchemaUser),
   });
   const name = formUser.watch("username");
-  const phoneNumber = formUser.watch("phoneNumber");
+  const email = formUser.watch("email");
 
   const handleSubmit = () => {
     onSubmit(formUser.getValues());
@@ -85,6 +66,7 @@ export default function FormStep({ onSubmit, onCancel }: FormStepProps) {
   };
 
   const handleSubmitAddress = async (variables: AddressData) => {
+    setLoading(true);
     onSubmit({ ...formUser.getValues(), ...variables });
     if (variables) {
       const locationResult = await axios.post(`/api/biteship/maps`, {
@@ -95,10 +77,12 @@ export default function FormStep({ onSubmit, onCancel }: FormStepProps) {
           ...locationResult.data[0],
           ...variables,
           name,
-          phoneNumber,
+          email,
         });
       }
     }
+    setLoading(false);
+    onCancel?.();
   };
 
   return (
@@ -142,12 +126,12 @@ export default function FormStep({ onSubmit, onCancel }: FormStepProps) {
               />
               <FormField
                 control={formUser.control}
-                name="phoneNumber"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone number</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="+62 85123123" {...field} />
+                      <Input placeholder="igwt@gmail.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -164,6 +148,7 @@ export default function FormStep({ onSubmit, onCancel }: FormStepProps) {
         </TabsContent>
         <TabsContent value="address">
           <AddressForm
+            loading={loading}
             onChange={setAddress}
             onSubmit={handleSubmitAddress}
             secondaryActionLabel="Back"

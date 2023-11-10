@@ -1,12 +1,9 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TTransactionData } from "@/hooks/use-create-transaction";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import CellAction from "./cell-action";
-
 export const columns: ColumnDef<TTransactionData>[] = [
   {
     accessorKey: "role",
@@ -40,10 +37,6 @@ export const columns: ColumnDef<TTransactionData>[] = [
   {
     accessorKey: "price",
     header: "Price",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
   },
   {
     accessorKey: "status",

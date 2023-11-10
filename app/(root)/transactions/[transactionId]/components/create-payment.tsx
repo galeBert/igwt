@@ -23,13 +23,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { TTransactionData } from "@/hooks/use-create-transaction";
 import { bankList } from "@/lib/bank-list";
-import { oneHourfromNowFlipFormat } from "@/lib/helpers";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
-import { Loader, Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+import React, { useState } from "react";
 import useSWR from "swr";
 
 interface CreatePaymentProps {
@@ -44,7 +42,6 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [bank, setBank] = useState("");
-  const [link, setLink] = useState("");
   const { user } = useUser();
   const isSender = data?.userId === user?.id && data?.role === "sender";
   const totalPrice = data?.selectedShipper?.price ?? 0 + (data?.price ?? 0);
@@ -64,6 +61,10 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
         role: data?.role,
         description: `selected payment to bca `,
         status: "waiting payment to complete",
+      });
+      await axios.patch(`/api/transaction/${transactionId}`, {
+        transactionId,
+        status: "011",
       });
       setOpen(false);
       mutate();
@@ -88,10 +89,7 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
             <div className="flex flex-col space-y-2 py-2">
               <Label className="text-lg">Bank</Label>
               <Select onValueChange={(e) => setBank(e)}>
-                <SelectTrigger
-                  disabled={isSender || !user}
-                  className="w-[180px]"
-                >
+                <SelectTrigger disabled={!user} className="w-[180px]">
                   <SelectValue
                     placeholder={isSender ? "not set" : "select bank..."}
                   />

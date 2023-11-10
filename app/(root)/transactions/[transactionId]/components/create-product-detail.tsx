@@ -15,7 +15,10 @@ import { Separator } from "@/components/ui/separator";
 import { TTransactionData } from "@/hooks/use-create-transaction";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
+import { mutate } from "swr";
 
 interface CreatePaymentProps {
   userId?: string;
@@ -51,18 +54,25 @@ export default function CreateProductDetail({
   userId,
   data,
 }: CreatePaymentProps) {
+  const { transactionId } = useParams();
+
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const [price, setPrice] = useState(0);
-  const [name, setName] = useState("");
-  const [weight, setWeight] = useState(0);
-  const [height, setHeight] = useState(0);
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState(data.package_detail?.name ?? "");
+  const [weight, setWeight] = useState(data.package_detail?.weight ?? 0);
+  const [height, setHeight] = useState(data.package_detail?.height ?? 0);
+  const [description, setDescription] = useState(
+    data.package_detail?.description ?? ""
+  );
   const { user } = useUser();
   const isSender = data.userId === user?.id && data.role === "sender";
 
   const handleUpdatePackagedetail = async () => {
+    setLoading(true);
     if (data) {
       await axios.patch(`/api/transactions`, {
-        transactionId: data.id,
+        transactionId,
         price,
         package_detail: {
           name,
@@ -71,10 +81,15 @@ export default function CreateProductDetail({
           description,
         },
       });
+      mutate(`single-transaction`);
     }
+    setLoading(false);
+    setOpen(false);
   };
+
+  // if (!isSender) return null;
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Add product detail</Button>
       </DialogTrigger>
@@ -128,7 +143,7 @@ export default function CreateProductDetail({
                 <div className="flex space-x-3 items-center ">
                   <Input
                     defaultValue={data.package_detail?.height}
-                    onChange={(e) => setWeight(Number(e.currentTarget.value))}
+                    onChange={(e) => setHeight(Number(e.currentTarget.value))}
                     type="number"
                     className="w-20"
                   />
@@ -147,8 +162,19 @@ export default function CreateProductDetail({
             </div>
             <Separator />
 
-            <Button onClick={handleUpdatePackagedetail} className="w-full">
-              Confirm
+            <Button
+              disabled={loading}
+              onClick={handleUpdatePackagedetail}
+              className="w-full"
+            >
+              {loading ? (
+                <div className="flex justify-center items-center w-full space-x-2">
+                  <Loader2 className="w-5 animate-spin" />
+                  <span>loading...</span>
+                </div>
+              ) : (
+                "Confirm"
+              )}
             </Button>
           </CardContent>
         </Card>

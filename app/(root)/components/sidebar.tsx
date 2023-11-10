@@ -19,10 +19,10 @@ export default function Sidebar() {
     <div className="flex flex-col space-y-4 justify-center">
       {navList.map((nav, idx) => {
         return (
-          <Link key={idx} href={nav.href}>
+          <Link className="w-full" key={idx} href={nav.href}>
             <Button
               variant={pathname === nav.href ? "default" : "ghost"}
-              className="text-left justify-start"
+              className="text-left w-full justify-start"
             >
               {nav.name}
             </Button>

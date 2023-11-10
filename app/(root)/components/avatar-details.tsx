@@ -19,6 +19,7 @@ interface AvatarDetailProps {
 }
 export default function AvatarDetails({ badge, userData }: AvatarDetailProps) {
   const { user } = useUser();
+
   return (
     <div className="flex flex-col space-y-1  items-center">
       <Avatar>
@@ -27,7 +28,7 @@ export default function AvatarDetails({ badge, userData }: AvatarDetailProps) {
       </Avatar>
       <div className="flex items-center space-x-1">
         <h1 className="h-full">{userData.name}</h1>
-        {userData.name === user?.firstName ? (
+        {userData.email === user?.emailAddresses?.[0].emailAddress ? (
           <h1>{" (You)"}</h1>
         ) : (
           <HoverCard>

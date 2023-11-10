@@ -12,6 +12,7 @@ interface useCreateTransactionStore {
 
 export interface UserData extends AddressData {
   name: string;
+  email: string;
 }
 
 export type TTransactionData = {
@@ -47,6 +48,7 @@ export type TTransactionData = {
     pricing: ShippingPriceListData[];
     shipping_type?: string;
   };
+  shipping_status?: { waybill_id: string; status: string };
   selectedShipper?: ShippingPriceListData;
   bank?: string;
   status?: string;

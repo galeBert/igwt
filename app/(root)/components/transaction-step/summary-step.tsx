@@ -15,21 +15,34 @@ import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 
-import { ArrowRightIcon } from "lucide-react";
-import React from "react";
-import AvatarDetails from "../avatar-details";
+import { ArrowRightIcon, Loader2 } from "lucide-react";
 
+import React, { useState } from "react";
+import AvatarDetails from "../avatar-details";
+import { redirect, useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { createTransaction } from "@/actions/create-transaction";
 interface SummaryStepProps {
   onCancel: () => void;
   onSubmit: () => void;
 }
 export default function SummaryStep({ onCancel, onSubmit }: SummaryStepProps) {
   const { transaction } = useCreateTransactionModal();
+  const { onClose } = useCreateTransactionModal();
   const { user } = useUser();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const handleClick = async () => {
+    setLoading(true);
     if (user) {
-      await axios.post(`/api/${user.id}/transaction`, transaction);
+      // const test = await axios.post(`/api/${user.id}/transaction`, transaction);
+      createTransaction({ data: transaction, userId: user.id }).then((data) => {
+        router.push(`/transactions/${data?.id}`);
+        toast.success("success created new transaction!");
+      });
     }
+    setLoading(false);
+    onClose();
   };
   return (
     <>
@@ -104,7 +117,16 @@ export default function SummaryStep({ onCancel, onSubmit }: SummaryStepProps) {
         <Button variant="secondary" onClick={onCancel}>
           Back
         </Button>
-        <Button onClick={handleClick}>Submit</Button>
+        <Button onClick={handleClick}>
+          {loading ? (
+            <div className="flex justify-center items-center w-full space-x-2">
+              <Loader2 className="w-5 animate-spin" />
+              <span>generating...</span>
+            </div>
+          ) : (
+            "Submit"
+          )}
+        </Button>
       </div>
     </>
   );

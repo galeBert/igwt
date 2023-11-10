@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
 import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -58,8 +57,8 @@ export default function PaymentAmmount({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Bank</DialogTitle>
-        <DialogDescription>which bank you want to choose</DialogDescription>
+        <DialogTitle>Price</DialogTitle>
+        <DialogDescription>how much does it cost</DialogDescription>
       </DialogHeader>
 
       <Form {...form}>
@@ -69,7 +68,7 @@ export default function PaymentAmmount({
             name="ammount"
             render={({ field: { onChange, ...rest } }) => (
               <FormItem>
-                <FormLabel>Ammount</FormLabel>
+                <FormLabel>Amount</FormLabel>
                 <FormControl>
                   <Input
                     type="number"

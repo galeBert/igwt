@@ -24,7 +24,7 @@ import { ShippingPriceListData } from "@/lib/types";
 import { useUser } from "@clerk/nextjs";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 
-import { PencilIcon } from "lucide-react";
+import { Loader2, PencilIcon } from "lucide-react";
 import React, { useState } from "react";
 import useSWR from "swr";
 interface CreateShipperProps {
@@ -43,12 +43,14 @@ export default function CreateShipper({
     isLoading,
     mutate,
   } = useSWR(`single-transaction`, () => getTransaction(transactionId));
+  const [loading, setLoading] = useState(false);
 
   const [open, setOpen] = useState(false);
   const { user } = useUser();
   const isSender = data.userId === user?.id && data.role === "sender";
 
   const handleUpdateTransaction = async () => {
+    setLoading(true);
     if (!data.shipping && data) {
       const shipdata = await axios.post("/api/biteship/courier-rate", {
         origin_area_id: data.sender?.address_id,
@@ -66,20 +68,25 @@ export default function CreateShipper({
           },
         ],
       });
+      console.log("FE", data);
 
       await axios.patch(`/api/transactions`, {
-        transactionId: data.id,
+        transactionId,
         shipping: { ...shipdata.data },
       });
     }
+    mutate();
+    setLoading(false);
   };
 
   const handleChooseShipping = async (selected: ShippingPriceListData) => {
+    setLoading(true);
     if (data) {
       await axios
         .patch(`/api/transaction/${data.id}`, {
-          transactionId: data.id,
+          transactionId,
           selectedShipper: { ...selected },
+          status: "001",
         })
         .then(async () => {
           await axios.post(`/api/transaction/${data.id}/transaction-log`, {
@@ -98,9 +105,11 @@ export default function CreateShipper({
     }
     mutate();
     setOpen(false);
+    setLoading(false);
   };
 
   const handleRequestPickup = async () => {
+    setLoading(true);
     if (
       datas?.sender &&
       datas?.reciever &&
@@ -117,6 +126,7 @@ export default function CreateShipper({
       });
       mutate();
     }
+    setLoading(false);
   };
 
   return (
@@ -174,9 +184,18 @@ export default function CreateShipper({
                           </div>
                           <div className="flex justify-end">
                             <Button
+                              className="w-full"
+                              disabled={loading || isLoading}
                               onClick={() => handleChooseShipping(shipper)}
                             >
-                              Select
+                              {loading ? (
+                                <div className="flex justify-center items-center w-full space-x-2">
+                                  <Loader2 className="w-5 animate-spin" />
+                                  <span>loading...</span>
+                                </div>
+                              ) : (
+                                "Select"
+                              )}
                             </Button>
                           </div>
                         </div>

@@ -9,14 +9,10 @@ import TransactionTable from "./components/transaction-table";
 
 export default async function page() {
   const { userId } = auth();
-  // const transactions = await getTransactions(userId ?? "");
-  // console.log("aaa", transactions);
 
   return (
     <div>
-      Transaction
       <TransactionTable userId={userId} />
-      {/* <DataTable columns={columns} data={transactions} /> */}
     </div>
   );
 }

@@ -19,10 +19,8 @@ export async function POST(
 
     await setDoc(doc(db, "user", userId), body);
 
-    return NextResponse.json({ hello: "world" });
+    return NextResponse.json(body);
   } catch (error) {
-    console.log("error", error);
-
     return NextResponse.json(error);
   }
 }

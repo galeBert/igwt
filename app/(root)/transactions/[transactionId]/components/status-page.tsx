@@ -1,7 +1,16 @@
 "use client";
 import { getTransaction } from "@/actions/get-transaction";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AvatarDetails from "@/app/(root)/components/avatar-details";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { ArrowRightIcon } from "lucide-react";
 import React from "react";
 import useSWR from "swr";
 
@@ -12,55 +21,75 @@ export default function StatusPage({ transactionId }: StatusPageInterface) {
   const { data, error, isLoading } = useSWR(`single-transaction`, () =>
     getTransaction(transactionId)
   );
+  console.log(data);
 
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-xl">Status</CardTitle>
-      </CardHeader>
-      <CardContent className="space-x-6 grid grid-cols-2">
-        <div className="flex flex-col space-y-4 justify-between">
-          <div className="flex space-x-2">
-            <Label>Shipping:</Label>
-            <div className="flex flex-col ">
-              <Label className="italic text-sm">
-                {data?.selectedShipper?.courier_name ?? "not set"}
-              </Label>
-              <Label className="text-xs font-light">
-                {data?.selectedShipper?.service_type ?? "not set"}
-              </Label>
-              <Label className="text-xs font-light">
-                {data?.selectedShipper?.duration ?? "not set"}
-              </Label>
-            </div>
-          </div>
+      <CardContent className="">
+        <div className="flex p-2 py-5 w-full justify-center items-center space-x-6">
+          {data?.sender && data?.reciever ? (
+            <>
+              <AvatarDetails badge="sender" userData={data?.sender} />
 
-          <div className="flex flex-col space-y-2">
-            <Label>Payment:</Label>
-            <Label className="italic text-sm">test</Label>
-          </div>
+              <ArrowRightIcon />
+              <AvatarDetails badge="reciever" userData={data?.reciever} />
+            </>
+          ) : null}
+        </div>
+        <Card className="p-2 w-full flex flex-col space-y-2 justify-between">
+          <div className="flex justify-between items-end">
+            <CardDescription>Package:</CardDescription>
 
-          <div className="flex flex-col space-y-2">
-            <Label>Total Price:</Label>
-            <Label className="italic text-sm">
-              {data?.price ? `Rp.${data.price}` : "not set"}
+            <Label>{data?.package_detail?.name}</Label>
+          </div>
+          <div className="flex justify-between">
+            <CardDescription>Shipper:</CardDescription>
+            <Label>
+              {data?.selectedShipper
+                ? data?.selectedShipper.company.toUpperCase()
+                : "not set"}
             </Label>
           </div>
-        </div>
-        <div className="flex flex-col space-y-4 justify-between">
-          <div className="flex flex-col space-y-2">
-            <Label>Package Name:</Label>
-            <Label className="italic text-sm">not set</Label>
+          <div className="flex justify-between">
+            <CardDescription>Payment:</CardDescription>
+
+            <Label>
+              {data?.payment
+                ? data?.payment?.bill_payment.sender_bank.toUpperCase()
+                : "not set"}
+            </Label>
           </div>
-          <div className="flex flex-col space-y-2">
-            <Label>Sender:</Label>
-            <Label className="italic text-sm">not set</Label>
+          <div className="flex justify-between">
+            <CardDescription>Payment Status:</CardDescription>
+
+            <Label>
+              {data?.payment ? data?.payment?.bill_payment.status : "not set"}
+            </Label>
           </div>
-          <div className="flex flex-col space-y-2">
-            <Label>Reciever:</Label>
-            <Label className="italic text-sm">Rp.10.000</Label>
+          <Separator />
+          <div className="flex justify-between">
+            <CardDescription>Shipping Price:</CardDescription>
+            <Label>
+              {data?.selectedShipper?.price
+                ? `Rp.${data?.selectedShipper?.price}`
+                : "(not set) Rp.0"}
+            </Label>
           </div>
-        </div>
+          <div className="flex justify-between">
+            <CardDescription> Price:</CardDescription>
+            <Label>
+              {data?.price ? `Rp.${data?.price}` : "(not set) Rp.0"}
+            </Label>
+          </div>
+          <div className="flex justify-between">
+            <CardDescription>Total Transaction:</CardDescription>
+            <Label className="text-lg">
+              Rp.
+              {Number(data?.price ?? 0) +
+                Number(data?.selectedShipper?.price ?? 0)}
+            </Label>
+          </div>
+        </Card>
       </CardContent>
     </Card>
   );

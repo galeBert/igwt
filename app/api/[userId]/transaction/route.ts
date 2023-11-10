@@ -19,6 +19,7 @@ export async function POST(
       ...body,
       userId,
       createdAt: Date.now(),
+      status: "000",
     };
     const newDoc = await addDoc(collection(db, `transactions`), data);
     return NextResponse.json({ id: newDoc.id, ...data });

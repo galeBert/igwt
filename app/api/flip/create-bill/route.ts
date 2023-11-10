@@ -22,6 +22,12 @@ export async function POST(req: Request, res: Response) {
     let encodedAuth: string = Buffer.from(
       `${process.env.FLIP_API_KEY}:`
     ).toString("base64");
+    console.log(
+      "EMFSLMFSLEINFLSENESLGNSILEGINELSGNELSGINSELGNESLINMWFMAW.FMAW.FMAW.FMWA.FKM",
+      requestData,
+      body,
+      transactionId
+    );
 
     const response = await axios(
       "https://bigflip.id/big_sandbox_api/v2/pwf/bill",

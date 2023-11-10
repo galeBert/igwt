@@ -21,6 +21,7 @@ export default function ProfileInfo({ data }: ProfileInfo) {
         axios.post(`/api/${user?.id}/address`, {
           ...locationResult.data[0],
           ...rest,
+          email: user?.emailAddresses[0]?.emailAddress,
         });
       }
     }

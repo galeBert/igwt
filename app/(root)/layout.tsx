@@ -17,11 +17,11 @@ export default async function layout({ children }: { children: ReactNode }) {
 
       <div className=" space-x-2 flex">
         <div className="w-1/4 space-y-4">
-          <Separator className="h-1 rounded-md" />
+          <Separator className=" rounded-md" />
           <Sidebar />
         </div>
         <div className="w-full space-y-4">
-          <Separator className="h-1 rounded-md" />
+          <Separator className=" rounded-md" />
           {children}
         </div>
       </div>

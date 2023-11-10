@@ -26,6 +26,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAdress } from "@/hooks/use-Adress";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -72,6 +73,7 @@ interface ProfileCardProps {
   secondaryAction?: () => void;
   secondaryActionLabel?: string;
   defaultValues?: AddressData;
+  loading?: boolean;
 }
 
 export default function AddressForm({
@@ -81,6 +83,7 @@ export default function AddressForm({
   secondaryActionLabel,
   defaultValues,
   onChange,
+  loading,
 }: ProfileCardProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -290,7 +293,16 @@ export default function AddressForm({
                 {secondaryActionLabel}
               </Button>
             ) : null}
-            <Button type="submit">Submit</Button>
+            <Button disabled={loading} type="submit">
+              {loading ? (
+                <div className="flex justify-center items-center w-full space-x-2">
+                  <Loader2 className="w-5 animate-spin" />
+                  <span>loading...</span>
+                </div>
+              ) : (
+                "Submit"
+              )}
+            </Button>
           </div>
         </form>
       </Form>

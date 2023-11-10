@@ -18,7 +18,7 @@ const oneHourfromNowFlipFormat = () => {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-    hourCycle: "h24",
+    hourCycle: "h23",
   });
 
   const splitedDateTime = oneHourFromNow.split(",");

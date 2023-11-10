@@ -16,12 +16,15 @@ export async function PATCH(
     const body = await req.json();
 
     const { transactionId, ...rest } = body;
+    console.log("test", rest, body);
 
     const transactionRef = doc(db, "transactions", transactionId);
 
     await updateDoc(transactionRef, rest);
     return NextResponse.json(rest);
   } catch (error: any) {
+    console.log(error);
+
     throw new Error("TRANSACTION_ERROR", error);
   }
 }

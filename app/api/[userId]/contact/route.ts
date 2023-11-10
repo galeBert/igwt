@@ -35,7 +35,7 @@ export async function POST(
       formated_address,
       street_name,
       description,
-      phoneNumber,
+      email,
     } = body;
 
     await addDoc(collection(db, `user/${userId}/contact`), {
@@ -48,7 +48,7 @@ export async function POST(
       formated_address,
       street_name,
       description: description ?? "",
-      phoneNumber,
+      email,
     });
 
     return NextResponse.json({ hello: "world" });

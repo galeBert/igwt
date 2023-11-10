@@ -1,5 +1,12 @@
 import { db } from "@/lib/firebase";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  or,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -9,7 +16,10 @@ export async function GET(
   try {
     const q = query(
       collection(db, "transactions"),
-      where("userId", "==", params.userId)
+      or(
+        where("sender.email", "==", params.userId),
+        where("reciever.email", "==", params.userId)
+      )
     );
 
     const querySnapshot = await getDocs(q);
@@ -21,6 +31,6 @@ export async function GET(
 
     return NextResponse.json(transactions);
   } catch (error: any) {
-    throw new Error("Transactioin_USER_ID", error);
+    throw new Error("TRANSACTION_USER_ID", error);
   }
 }
