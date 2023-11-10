@@ -45,15 +45,23 @@ export async function POST(req: Request, res: Response) {
       : 0;
     const docRef = doc(db, "transactions", transaction.fbaseId);
     await updateDoc(docRef, {
-      "shipping_status.history": orderTrack.data.history?.[index],
+      "shipping_status.history": orderTrack.data.history,
     });
 
+    const status = orderTrack.data.status.split("_").join(" ");
     await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}/transaction-log`,
       {
         role: orderTrack.data.courier.company,
         description: orderTrack.data.history[index].note.split("_").join(" "),
         status: orderTrack.data.status.split("_").join(" "),
+      }
+    );
+    await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}`,
+      {
+        transactionId: transaction.fbaseId,
+        status: status === "allocated" ? "003" : "014",
       }
     );
 

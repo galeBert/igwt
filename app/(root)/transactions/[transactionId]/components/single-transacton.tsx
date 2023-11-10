@@ -39,6 +39,12 @@ export default function SingleTransaction({
       ? { message: "payment complete", status: "ok" }
       : data.status === "022"
       ? { message: "payment failed", status: "fail" }
+      : data.status === "003"
+      ? { message: "package is picked up", status: "ok" }
+      : data.status === "013"
+      ? { message: "waiting courier to pickup", status: "pending" }
+      : data.status === "023"
+      ? { message: "pickup canceled", status: "fail" }
       : { message: "transaction not found", status: "fail" };
   return (
     <>

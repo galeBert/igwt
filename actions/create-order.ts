@@ -45,6 +45,7 @@ export const createOrder = async ({
   await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions`, {
     transactionId,
     shipping_status: { ...awaitedTransactionData },
+    status: "013",
   });
 
   await axios.post(

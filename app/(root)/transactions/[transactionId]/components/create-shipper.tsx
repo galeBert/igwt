@@ -68,7 +68,6 @@ export default function CreateShipper({
           },
         ],
       });
-      console.log("FE", data);
 
       await axios.patch(`/api/transactions`, {
         transactionId,
