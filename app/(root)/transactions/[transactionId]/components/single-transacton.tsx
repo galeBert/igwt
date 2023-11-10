@@ -26,14 +26,19 @@ export default function SingleTransaction({
   if (!data) {
     return <p>transaction not found</p>;
   }
-
+  //000 second 0 mean transaction status success,010 second 1 mean transaction pending,020 second 2 mean transaction fail
+  //000 third 0 mean transaction type created, 1 means shippent, 2 means payment
   const status =
     data.status === "000"
       ? { message: "transaction created", status: "ok" }
       : data.status === "001"
       ? { message: "shipper selected", status: "ok" }
-      : data.status === "011"
+      : data.status === "012"
       ? { message: "waiting payment to complete", status: "pending" }
+      : data.status === "002"
+      ? { message: "payment complete", status: "ok" }
+      : data.status === "022"
+      ? { message: "payment failed", status: "fail" }
       : { message: "transaction not found", status: "fail" };
   return (
     <>

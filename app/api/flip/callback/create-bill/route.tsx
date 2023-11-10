@@ -67,6 +67,13 @@ export async function POST(req: Request, res: Response) {
               status: "complete",
             }
           );
+          await axios.patch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${selectedTransaction?.fBaseId}`,
+            {
+              transactionId: selectedTransaction?.fBaseId,
+              status: "002",
+            }
+          );
         } else {
           await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${selectedTransaction?.fBaseId}/transaction-log`,
@@ -74,6 +81,13 @@ export async function POST(req: Request, res: Response) {
               role: "reciever",
               description: `payment failed, reciever need to try again`,
               status: "failed",
+            }
+          );
+          await axios.patch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${selectedTransaction?.fBaseId}`,
+            {
+              transactionId: selectedTransaction?.fBaseId,
+              status: "022",
             }
           );
         }

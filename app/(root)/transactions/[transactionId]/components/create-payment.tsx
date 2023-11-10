@@ -64,7 +64,7 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
       });
       await axios.patch(`/api/transaction/${transactionId}`, {
         transactionId,
-        status: "011",
+        status: "012",
       });
       setOpen(false);
       mutate();
