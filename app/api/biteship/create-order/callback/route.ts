@@ -44,6 +44,8 @@ export async function POST(req: Request, res: Response) {
       ? orderTrack.data.history.length - 1
       : 0;
     const docRef = doc(db, "transactions", transaction.fbaseId);
+    const status = orderTrack.data.status.split("_").join(" ");
+
     await updateDoc(docRef, {
       "shipping_status.history": orderTrack.data.history.map(
         (historyList: any) => ({
@@ -51,40 +53,28 @@ export async function POST(req: Request, res: Response) {
           status: historyList.status.split("_").join(" "),
         })
       ),
+      status:
+        status === "allocated"
+          ? "003"
+          : status === "picking up"
+          ? "114"
+          : status === "picked"
+          ? "214"
+          : status === "dropping off"
+          ? "314"
+          : status === "delivered"
+          ? "004"
+          : "",
     });
 
-    const status = orderTrack.data.status.split("_").join(" ");
-    console.log(status);
-
-    const transactionData = await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}/transaction-log`,
-        {
-          role: orderTrack.data.courier.company,
-          description: orderTrack.data.history[index].note.split("_").join(" "),
-          status: orderTrack.data.status.split("_").join(" "),
-        }
-      )
-      .then(async () => {
-        await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}`,
-          {
-            transactionId: transaction.fbaseId,
-            status:
-              status === "allocated"
-                ? "003"
-                : status === "picking up"
-                ? "114"
-                : status === "picked"
-                ? "214"
-                : status === "dropping off"
-                ? "314"
-                : status === "delivered"
-                ? "004"
-                : "",
-          }
-        );
-      });
+    const transactionData = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}/transaction-log`,
+      {
+        role: orderTrack.data.courier.company,
+        description: orderTrack.data.history[index].note.split("_").join(" "),
+        status: orderTrack.data.status.split("_").join(" "),
+      }
+    );
 
     return NextResponse.json(transactionData);
   } catch (error) {
