@@ -48,7 +48,7 @@ export async function POST(req: Request, res: Response) {
       "shipping_status.history": orderTrack.data.history.map(
         (historyList: any) => ({
           ...historyList,
-          note: historyList.note.split("_").join(" "),
+          status: historyList.status.split("_").join(" "),
         })
       ),
     });
@@ -65,25 +65,26 @@ export async function POST(req: Request, res: Response) {
           status: orderTrack.data.status.split("_").join(" "),
         }
       )
-      .then(() => {});
-    await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}`,
-      {
-        transactionId: transaction.fbaseId,
-        status:
-          status === "allocated"
-            ? "003"
-            : status === "picking up"
-            ? "114"
-            : status === "picked"
-            ? "214"
-            : status === "dropping off"
-            ? "314"
-            : status === "delivered"
-            ? "004"
-            : "",
-      }
-    );
+      .then(async () => {
+        await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}`,
+          {
+            transactionId: transaction.fbaseId,
+            status:
+              status === "allocated"
+                ? "003"
+                : status === "picking up"
+                ? "114"
+                : status === "picked"
+                ? "214"
+                : status === "dropping off"
+                ? "314"
+                : status === "delivered"
+                ? "004"
+                : "",
+          }
+        );
+      });
 
     return NextResponse.json(transactionData);
   } catch (error) {
