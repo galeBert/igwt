@@ -45,27 +45,47 @@ export async function POST(req: Request, res: Response) {
       : 0;
     const docRef = doc(db, "transactions", transaction.fbaseId);
     await updateDoc(docRef, {
-      "shipping_status.history": orderTrack.data.history,
+      "shipping_status.history": orderTrack.data.history.map(
+        (historyList: any) => ({
+          ...historyList,
+          note: historyList.note.split("_").join(" "),
+        })
+      ),
     });
 
     const status = orderTrack.data.status.split("_").join(" ");
-    await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}/transaction-log`,
-      {
-        role: orderTrack.data.courier.company,
-        description: orderTrack.data.history[index].note.split("_").join(" "),
-        status: orderTrack.data.status.split("_").join(" "),
-      }
-    );
+    console.log(status);
+
+    const transactionData = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}/transaction-log`,
+        {
+          role: orderTrack.data.courier.company,
+          description: orderTrack.data.history[index].note.split("_").join(" "),
+          status: orderTrack.data.status.split("_").join(" "),
+        }
+      )
+      .then(() => {});
     await axios.patch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transaction.fbaseId}`,
       {
         transactionId: transaction.fbaseId,
-        status: status === "allocated" ? "003" : "014",
+        status:
+          status === "allocated"
+            ? "003"
+            : status === "picking up"
+            ? "114"
+            : status === "picked"
+            ? "214"
+            : status === "dropping off"
+            ? "314"
+            : status === "delivered"
+            ? "004"
+            : "",
       }
     );
 
-    return NextResponse.json(null);
+    return NextResponse.json(transactionData);
   } catch (error) {
     console.log("error", error);
 
