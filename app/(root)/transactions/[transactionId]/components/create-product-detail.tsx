@@ -86,13 +86,13 @@ export default function CreateProductDetail({
     setLoading(false);
     setOpen(false);
   };
-
-  // if (!isSender) return null;
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>Add product detail</Button>
-      </DialogTrigger>
+      {!isSender || !data.package_detail?.weight ? (
+        <DialogTrigger asChild>
+          <Button>Add product detail</Button>
+        </DialogTrigger>
+      ) : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Payment</DialogTitle>

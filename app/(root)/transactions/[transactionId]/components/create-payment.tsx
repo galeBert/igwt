@@ -74,9 +74,11 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary">Set Payment</Button>
-      </DialogTrigger>
+      {data?.selectedShipper && !isSender ? (
+        <DialogTrigger asChild>
+          <Button variant="secondary">Set Payment</Button>
+        </DialogTrigger>
+      ) : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Payment</DialogTitle>

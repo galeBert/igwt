@@ -65,6 +65,15 @@ export async function POST(req: Request, res: Response) {
           : status === "delivered"
           ? "004"
           : "",
+      transaction_status:
+        status === "delivered"
+          ? {
+              status: "DONE",
+              expired_at: new Date(
+                new Date().getTime() + 60 * 60 * 1000
+              ).toISOString(),
+            }
+          : undefined,
     });
 
     const transactionData = await axios.post(

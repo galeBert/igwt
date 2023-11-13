@@ -3,19 +3,13 @@ import { getTransaction } from "@/actions/get-transaction";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Banknote, Copy, Plane, RefreshCw } from "lucide-react";
+import { Banknote, Copy, Plane, RefreshCw, Terminal } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import useSWR from "swr";
 import Countdown from "react-countdown";
 import moment from "moment";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import clsx from "clsx";
 import { Label } from "@/components/ui/label";
 
@@ -51,7 +45,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
   const shippingInfo = datas?.shipping_status ? (
     <Alert
       className={clsx(
-        "transition-all relative   duration-500 !-translate-y-100",
+        "backdrop-blur-xl bg-white bg-opacity-20  dark:bg-opacity-5   border-none transition-all relative   duration-500 !-translate-y-100",
         {
           "shadow-blue-400  ring-4 border-solid  ring-blue-400  translate-y-0  shadow-lg":
             start,
@@ -104,7 +98,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
   const paymentInfo = datas?.payment ? (
     <Alert
       className={clsx(
-        "transition-all relative   duration-500 !-translate-y-100",
+        "backdrop-blur-xl bg-white bg-opacity-20  dark:bg-opacity-5   border-none transition-all relative   duration-500 !-translate-y-100",
         {
           "shadow-blue-400  ring-4 border-solid  ring-blue-400  translate-y-0  shadow-lg":
             start,
@@ -157,7 +151,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
         {datas?.payment?.bill_payment.sender_bank.toUpperCase()}
       </AlertDescription>
       <AlertDescription className="mt-4 flex items-center space-x-2 justify-between">
-        <code className="relative w-full rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+        <code className="relative w-full rounded dark:bg-black bg-white backdrop-blur-2xl bg-opacity-80 px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
           {datas?.payment?.bill_payment.receiver_bank_account.account_number}
         </code>
         <Button
@@ -184,15 +178,31 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
         {paymentInfo}
       </>
     ) : (
-      <div className="flex w-full my-auto h-full items-center justify-center">
-        <Label>info about payment and shipping will appear here</Label>
+      <div className="flex bg-cover w-full my-auto h-full items-center justify-center">
+        <Alert className="backdrop-blur-xl bg-white bg-opacity-20  dark:bg-opacity-5  border-none">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            info about payment and shipping will appear here
+          </AlertDescription>
+        </Alert>
       </div>
     );
   return (
-    <Card className=" h-full w-full min-h-full p-5 px-0">
-      <CardContent className="h-full space-y-2">
-        <CardTitle>Info</CardTitle>
-        <div className=" h-full space-y-2">{infoContent}</div>
+    <Card
+      className={`
+       relative bg-cover w-full min-h-full p-5 px-0
+      dark:bg-[url('https://firebasestorage.googleapis.com/v0/b/igwt-3b1a7.appspot.com/o/dark-mode-mono-rezise.png?alt=media&token=299e2672-99a0-498d-b1c3-d1a235b4c5ab&_gl=1*c8fozh*_ga*NTY0Mjc2NzI5LjE2OTU1NjQzNDg.*_ga_CW55HF8NVT*MTY5OTYwNDkyMS42MS4xLjE2OTk2MDU4NzguNTIuMC4w')] 
+      bg-[url('https://firebasestorage.googleapis.com/v0/b/igwt-3b1a7.appspot.com/o/light-mode-mono-resize.png?alt=media&token=43cbdf53-10d9-47c4-b987-f67f997aec11&_gl=1*fqouxe*_ga*NTY0Mjc2NzI5LjE2OTU1NjQzNDg.*_ga_CW55HF8NVT*MTY5OTYwNDkyMS42MS4xLjE2OTk2MDYxODkuNDguMC4w')] 
+      `}
+    >
+      <div
+        className={clsx(" w-full h-full absolute top-0", {
+          "": !datas?.payment,
+        })}
+      />
+      <CardContent className="h-full space-y-2  ">
+        <div className=" h-full z-10 relative space-y-2">{infoContent}</div>
       </CardContent>
     </Card>
   );

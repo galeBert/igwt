@@ -24,7 +24,7 @@ import { ShippingPriceListData } from "@/lib/types";
 import { useUser } from "@clerk/nextjs";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 
-import { Loader2, PencilIcon } from "lucide-react";
+import { BoxIcon, Loader2, PencilIcon } from "lucide-react";
 import React, { useState } from "react";
 import useSWR from "swr";
 interface CreateShipperProps {
@@ -130,21 +130,50 @@ export default function CreateShipper({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button className="space-x-1" onClick={handleRequestPickup}>
-        Request Pickup now
-      </Button>
-      <DialogTrigger onClick={handleUpdateTransaction} asChild>
-        <Button className="space-x-1">
-          {datas?.selectedShipper ? (
-            <>
-              <CheckCircledIcon className="bg-green-600 rounded-full text-white w-5 h-5 " />
-              <p>Shippind Selected</p>
-            </>
+      {data.selectedShipper &&
+      data.payment?.bill_payment.status === "SUCCESSFUL" &&
+      !data.shipping_status &&
+      isSender ? (
+        <Button
+          disabled={loading}
+          className="space-x-1 flex items-center relative"
+          onClick={handleRequestPickup}
+        >
+          {loading ? (
+            <div className="flex justify-center items-center w-full space-x-2">
+              <Loader2 className="w-5 animate-spin" />
+              <span>requesting...</span>
+            </div>
           ) : (
-            <p>Click here to choose shipping</p>
+            <>
+              <div className="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+              </div>
+              <div className="flex justify-center items-center w-full space-x-2">
+                <BoxIcon className="w-5 " />
+                <span>Request Pickup</span>
+              </div>
+            </>
           )}
         </Button>
-      </DialogTrigger>
+      ) : null}
+      {!isSender ? (
+        <DialogTrigger onClick={handleUpdateTransaction} asChild>
+          <Button className="space-x-1">
+            {datas?.selectedShipper ? (
+              <>
+                <CheckCircledIcon className="bg-green-600 rounded-full text-white w-5 h-5 " />
+                <p>Shippier Selected</p>
+              </>
+            ) : (
+              <p>Click here to choose shipping</p>
+            )}
+          </Button>
+        </DialogTrigger>
+      ) : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Shipping</DialogTitle>

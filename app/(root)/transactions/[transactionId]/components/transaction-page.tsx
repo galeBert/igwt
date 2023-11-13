@@ -50,15 +50,9 @@ export default function TransactionPage() {
     return unsubscribe;
   }, [transactionId]);
 
-  const handleTransaction = async () => {
-    await fetch(`/api/transaction/${transactionId}/transaction-log`, {
-      method: "POST",
-    });
-  };
   return (
     <div>
-      <Button onClick={handleTransaction}>AddData</Button>
-      <Label>Transaction Log</Label>
+      <Label className="text-lg">Transaction Log</Label>
       <DataTable data={log} columns={columns} />
     </div>
   );
