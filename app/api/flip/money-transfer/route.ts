@@ -47,7 +47,7 @@ export async function POST(req: Request, res: Response) {
       type: "outcome",
       status,
       flipId: id,
-      remark: userId.split("_")?.[1],
+      remark: userId,
     });
 
     return NextResponse.json(response.data);

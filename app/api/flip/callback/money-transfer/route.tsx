@@ -31,8 +31,10 @@ export async function POST(req: Request, res: Response) {
 
     if (translatedData) {
       const data = JSON.parse(translatedData);
+      const userId = data.idempotency_key.split("-")[4];
+
       const q = query(
-        collection(db, `user/user_${data.remark}/balance`),
+        collection(db, `user/user_${userId}/balance`),
         where("flipId", "==", data.id)
       );
       let selectedTransaction: any;
@@ -60,7 +62,7 @@ export async function POST(req: Request, res: Response) {
         //   { method: "GET" }
         // );
 
-        return NextResponse.json({ selectedTransaction, data });
+        return NextResponse.json({ selectedTransaction, data, userId });
       }
     }
     return NextResponse.json(null);
