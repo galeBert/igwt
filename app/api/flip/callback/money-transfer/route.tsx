@@ -34,7 +34,7 @@ export async function POST(req: Request, res: Response) {
       const idem = data.idempotency_key;
       const idem2 = data.idempotency_key.split("-");
       const userId = data.idempotency_key.split("-")[4];
-      const userId1 = data.idempotency_key.split("-")[4];
+      const userId1 = data.idempotency_key.split("-")[3];
 
       const q = query(
         collection(db, `user/user_${userId}/balance`),
@@ -49,6 +49,7 @@ export async function POST(req: Request, res: Response) {
         test: userId,
         test2: userId1,
         test3: idem,
+        test4: idem2,
       });
 
       if (selectedTransaction) {
