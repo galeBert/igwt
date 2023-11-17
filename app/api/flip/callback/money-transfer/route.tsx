@@ -31,7 +31,8 @@ export async function POST(req: Request, res: Response) {
 
     if (translatedData) {
       const data = JSON.parse(translatedData);
-      const idem = data.idempotency_key.split("-");
+      const idem = data.idempotency_key;
+      const idem2 = data.idempotency_key.split("-");
       const userId = data.idempotency_key.split("-")[4];
       const userId1 = data.idempotency_key.split("-")[4];
 
@@ -65,7 +66,7 @@ export async function POST(req: Request, res: Response) {
         // );
 
         return NextResponse.json({
-          selectedTransaction,
+          selectedTransaction: { idem, data, idem2 },
           data,
           test: userId,
           test2: userId1,
@@ -73,7 +74,6 @@ export async function POST(req: Request, res: Response) {
         });
       }
     }
-    return NextResponse.json(null);
   } catch (error) {
     console.log("error", error);
 
