@@ -66,8 +66,6 @@ export async function POST(req: Request, res: Response) {
         // );
 
         return NextResponse.json({
-          selectedTransaction: { idem, data, idem2 },
-          data,
           test: userId,
           test2: userId1,
           test3: idem,
