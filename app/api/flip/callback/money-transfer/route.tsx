@@ -60,7 +60,7 @@ export async function POST(req: Request, res: Response) {
         //   { method: "GET" }
         // );
 
-        return NextResponse.json(selectedTransaction);
+        return NextResponse.json({ selectedTransaction, data });
       }
     }
     return NextResponse.json(null);
