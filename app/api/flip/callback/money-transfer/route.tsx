@@ -76,7 +76,9 @@ export async function POST(req: Request, res: Response) {
           test3: idem,
         });
       }
+      return NextResponse.json(null);
     }
+    return NextResponse.json(null);
   } catch (error) {
     console.log("error", error);
 
