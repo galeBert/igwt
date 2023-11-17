@@ -1,6 +1,12 @@
 import { getUserData } from "@/actions/get-user-data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import { currentUser } from "@clerk/nextjs";
@@ -11,12 +17,15 @@ import ProfileInfo from "./components/profile-info";
 export default async function page() {
   const userData = await currentUser();
   const fUserData = await getUserData(userData?.id ?? "");
-fUserData.street_name
+
   const translatedUserData: User = JSON.parse(JSON.stringify(userData));
 
   return (
     <div>
       <CardTitle>Profile</CardTitle>
+      <CardDescription>
+        This is how others will see you on the site.
+      </CardDescription>
       <Card className="mt-4 hover:dark:bg-gray-900">
         <CardHeader className="">
           <div className="flex space-x-2 py-1 px-2 focus:ring-2 focus:ring-black items-center">
@@ -26,7 +35,9 @@ fUserData.street_name
                 src="https://github.com/shadcn.png"
                 alt="@shadcn"
               />
-              <AvatarFallback>A</AvatarFallback>
+              <AvatarFallback>
+                {translatedUserData.firstName?.slice(0, 1)}
+              </AvatarFallback>
             </Avatar>
             <div>
               <CardTitle>{translatedUserData.firstName}</CardTitle>
@@ -38,7 +49,6 @@ fUserData.street_name
         </CardHeader>
         <CardContent className="space-y-3">
           <Separator />
-          <CardTitle className="text-xl">Address</CardTitle>
           <ProfileInfo data={fUserData} />
         </CardContent>
       </Card>

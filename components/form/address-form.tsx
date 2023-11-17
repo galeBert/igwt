@@ -23,49 +23,52 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useAdress } from "@/hooks/use-Adress";
+import {
+  useCity,
+  useDistrict,
+  getPostalCode,
+  useProvince,
+} from "@/hooks/useCloudAlert";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+
 import { Loader2 } from "lucide-react";
+import { text } from "node:stream/consumers";
 
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import useSWR from "swr";
 
 import * as z from "zod";
+import { string } from "zod";
 
+const addresSchema = z.object({
+  text: z.string(),
+  id: z.string(),
+});
 const FormSchema = z.object({
-  province: z.string(),
-  city: z.string(),
-  district: z.string(),
+  province: addresSchema,
+  city: addresSchema,
+  district: addresSchema,
+  postalCode: addresSchema,
   street_name: z.string(),
-  postalCode: z.string().optional(),
   description: z.string().optional(),
 });
 
-type BiteshipAddress = {
+type AdressDetail = {
+  text: string;
   id: string;
-  name: string;
-  country_name: string;
-  country_code: string;
-  administrative_division_level_1_name: string;
-  administrative_division_level_1_type: string;
-  administrative_division_level_2_name: string;
-  administrative_division_level_2_type: string;
-  administrative_division_level_3_name: string;
-  administrative_division_level_3_type: string;
-  postal_code: number;
 };
-
 export type AddressData = {
-  city?: string;
-  district?: string;
-  province?: string;
-  postalCode?: string;
+  city: AdressDetail;
+  district: AdressDetail;
+  province: AdressDetail;
+  postalCode: AdressDetail;
   street_name?: string;
   description?: string;
   formatted_address?: string;
   address_id?: string;
 };
+
 interface ProfileCardProps {
   data?: AddressData;
   onSubmit?: (variables?: any) => void;
@@ -87,81 +90,60 @@ export default function AddressForm({
 }: ProfileCardProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues,
+    defaultValues: {
+      province: {
+        text: data?.province?.text ?? "",
+        id: data?.province?.id ?? undefined,
+      },
+      city: {
+        text: data?.city?.text ?? "",
+        id: data?.city?.id ?? undefined,
+      },
+      district: {
+        text: data?.district?.text ?? "",
+        id: data?.district?.id ?? undefined,
+      },
+      postalCode: {
+        text: data?.postalCode?.text ?? "",
+        id: data?.postalCode?.id ?? undefined,
+      },
+      street_name: data?.street_name ?? "",
+      description: data?.description ?? "",
+    },
   });
 
-  const provincies = useAdress({
-    type: "province",
-  });
+  const { data: provincies } = useSWR(
+    "https://alamat.thecloudalert.com/api/provinsi/get",
+    useProvince
+  );
 
   const selectedProvince = form.watch("province");
   const selectedCity = form.watch("city");
   const selectedDistrict = form.watch("district");
-  const selectedPostalCode = form.watch("postalCode");
-  const street_name = form.watch("street_name");
-  const description = form.watch("description");
+
+  const { data: cities } = useSWR(selectedProvince.id, useCity);
+  const { data: district } = useSWR(selectedCity.id, useDistrict);
+  const { data: postalcode, mutate } = useSWR("postal-code", async () => {
+    if (selectedDistrict.id && selectedCity.id) {
+      const getProvince = await fetch(
+        `https://alamat.thecloudalert.com/api/kodepos/get/?d_kabkota_id=${selectedCity.id}&d_kecamatan_id=${selectedDistrict.id}`,
+        { method: "GET" }
+      );
+      const province = await getProvince.json();
+      const result = province.result;
+
+      if (!result.length) {
+        return [];
+      }
+      return result;
+    }
+  });
 
   useEffect(() => {
-    if (
-      selectedProvince ||
-      selectedCity ||
-      selectedDistrict ||
-      selectedPostalCode ||
-      street_name
-    ) {
-      onChange?.({
-        province: selectedProvince,
-        city: selectedCity,
-        district: selectedDistrict,
-        postalCode: selectedPostalCode,
-        street_name,
-        description,
-      });
+    if ((selectedDistrict.id, selectedCity.id)) {
+      mutate();
     }
-  }, [
-    description,
-    onChange,
-    selectedCity,
-    selectedDistrict,
-    selectedPostalCode,
-    selectedProvince,
-    street_name,
-  ]);
-
-  //city
-  const findCity = provincies.find(
-    (province) => province.text === selectedProvince
-  );
-  const cityId = findCity ? Number(findCity.id) : undefined;
-
-  const cities = useAdress({
-    type: "city",
-    id: cityId,
-  });
-
-  //district
-  const findDistrict = cities.find(
-    (province) => province.text === selectedCity
-  );
-  const districtId = findDistrict ? Number(findDistrict.id) : undefined;
-
-  const district = useAdress({
-    type: "district",
-    id: districtId,
-  });
-
-  //subdistrcict
-  const findSubdistrict = district.find(
-    (province) => province.text === selectedDistrict
-  );
-  const subistrictId = findSubdistrict ? Number(findSubdistrict.id) : undefined;
-
-  //postalcode
-  const postalcode = useAdress({
-    type: "postalcode",
-    id: subistrictId,
-    cityId: districtId,
-  });
+  }, [selectedDistrict.id, selectedCity.id, mutate]);
 
   const [open, setOpen] = useState({
     province: false,
@@ -175,15 +157,19 @@ export default function AddressForm({
     name: "province" | "city" | "district" | "postalCode";
     data: any[];
   }[] = [
-    { name: "province", data: provincies },
-    { name: "city", data: cities },
-    { name: "district", data: district },
-    { name: "postalCode", data: postalcode },
+    { name: "province", data: provincies ?? [] },
+    { name: "city", data: cities ?? [] },
+    { name: "district", data: district ?? [] },
+    { name: "postalCode", data: postalcode ?? [] },
   ];
 
   const handleClick = () => {
     onSubmit?.(form.getValues());
   };
+
+  useEffect(() => {
+    onChange?.(form.getValues());
+  }, [form, onChange]);
 
   return (
     <>
@@ -218,7 +204,7 @@ export default function AddressForm({
                             aria-expanded={open[fieldList.name]}
                             className="w-full justify-between"
                           >
-                            {form.watch(fieldList.name) ??
+                            {form.watch(fieldList.name).text ??
                               `Select ${fieldList.name}...`}
                           </Button>
                         </PopoverTrigger>
@@ -235,10 +221,7 @@ export default function AddressForm({
                                     <CommandItem
                                       key={idx}
                                       onSelect={() => {
-                                        form.setValue(
-                                          fieldList.name,
-                                          prov.text
-                                        );
+                                        form.setValue(fieldList.name, prov);
                                         setOpen((e) => ({
                                           ...e,
                                           [fieldList.name]: false,

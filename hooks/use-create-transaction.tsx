@@ -13,6 +13,7 @@ interface useCreateTransactionStore {
 export interface UserData extends AddressData {
   name: string;
   email: string;
+  balance: number;
 }
 
 export type TTransactionData = {
@@ -59,6 +60,10 @@ export type TTransactionData = {
     description?: string;
   };
   userId?: string;
+  transaction_status?: {
+    status: string;
+    expired_at: string;
+  };
 };
 
 export const useCreateTransactionModal = create<useCreateTransactionStore>(

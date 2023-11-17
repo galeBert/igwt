@@ -78,7 +78,7 @@ export default function PaymentAmmount({
                   />
                 </FormControl>
                 <FormDescription>
-                  This ammount is exlude shipping
+                  This ammount is exclude shipping
                 </FormDescription>
                 <FormMessage />
               </FormItem>

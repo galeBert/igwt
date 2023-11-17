@@ -1,19 +1,25 @@
 import { getUserData } from "@/actions/get-user-data";
+import StoreInitializer from "@/components/store-initializer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
+import { useUserData } from "@/hooks/useUserData";
+import { formatter } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
-import axios from "axios";
 import Image from "next/image";
 import CreateTransactionModal from "./components/create-transaction-modal";
 import MainCard from "./components/main-card";
+import TransactionTable from "./transactions/components/transaction-table";
+
 export default async function Home() {
+  // const { data } = useSWR("test", () => getUserData(userId ?? ""));
   const { userId } = auth();
   const fUserData = await getUserData(userId ?? "");
+  useUserData.setState({ balance: fUserData.balance });
 
   return (
     <>
-      <div className=" space-x-2 flex">
+      <StoreInitializer balance={fUserData.balance} />
+      <div className="space-y-2">
         <div className="w-full">
           <Card className="relative overflow-hidden bg-center bg-cover hover:dark:bg-gray-900">
             <div className="absolute  w-full h-full flex flex-col justify-center px-20 items-end ">
@@ -42,12 +48,15 @@ export default async function Home() {
               {/* <div className="bg-white absolute w-full h-full left-0 rounded-md opacity-5" /> */}
               <CardHeader>
                 <CardTitle className="text-xl">Balance</CardTitle>
-                <CardTitle>Rp.100.000.000</CardTitle>
+                <CardTitle>
+                  {formatter.format(useUserData.getState().balance)}
+                </CardTitle>
               </CardHeader>
-              <MainCard />
+              <MainCard user={fUserData} userId={userId ?? ""} />
             </CardContent>
           </Card>
         </div>
+        <TransactionTable userId={userId} />
       </div>
       <CreateTransactionModal fUserData={fUserData} />
     </>

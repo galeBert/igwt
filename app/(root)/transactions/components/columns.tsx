@@ -1,8 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TTransactionData } from "@/hooks/use-create-transaction";
+import { translateStatus } from "@/lib/helpers";
+import { formatter } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
+import clsx from "clsx";
 import { ArrowUpDown } from "lucide-react";
+import Link from "next/link";
 import CellAction from "./cell-action";
 export const columns: ColumnDef<TTransactionData>[] = [
   {
@@ -28,20 +32,44 @@ export const columns: ColumnDef<TTransactionData>[] = [
     header: "Transaction with",
     cell: ({ row }) => {
       if (row.original.role === "sender") {
-        return <div>{row.original.reciever?.name}</div>;
+        return (
+          <Link href={`/transactions/${row.original.id}`}>
+            <div>{row.original.reciever?.name}</div>
+          </Link>
+        );
       }
 
-      return <div>{row.original.sender?.name}</div>;
+      return (
+        <Link href={`/transactions/${row.original.id}`}>
+          <div>{row.original.sender?.name}</div>
+        </Link>
+      );
     },
   },
   {
     accessorKey: "price",
     header: "Price",
+    cell: ({ row }) => {
+      return <div>{formatter.format(Number(row.original.price))}</div>;
+    },
   },
   {
     accessorKey: "status",
+
     cell: ({ row }) => {
-      return <CellAction data={row.original} />;
+      const status = translateStatus(row.original.status ?? "");
+
+      return (
+        <Badge
+          className={clsx({
+            "bg-green-400": status.status === "ok",
+            "bg-yellow-400": status.status === "pending",
+            "bg-red-400": status.status === "fail",
+          })}
+        >
+          {status.message}
+        </Badge>
+      );
     },
   },
 ];

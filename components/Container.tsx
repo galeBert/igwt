@@ -10,7 +10,6 @@ interface ContainerProps {
 export default function Container({ children }: ContainerProps) {
   const [mounted, setMounted] = useState(false);
   const { isSignedIn, isLoaded } = useUser();
-
   useEffect(() => {
     setMounted(true);
   }, []);

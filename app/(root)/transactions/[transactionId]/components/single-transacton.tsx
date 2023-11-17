@@ -3,16 +3,16 @@ import { getTransaction } from "@/actions/get-transaction";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { axios } from "@/lib/axios";
 import clsx from "clsx";
-import { ArrowDown } from "lucide-react";
-import React, { useEffect } from "react";
+import moment from "moment";
+import React from "react";
 import Countdown from "react-countdown";
 import useSWR from "swr";
 import CreatePayment from "./create-payment";
@@ -31,15 +31,31 @@ export default function SingleTransaction({
     getTransaction(transactionId)
   );
 
-  const limit = new Date(Date.now() + 5000).getTime() - Date.now();
-  console.log(limit);
+  const isPackageArrived = data?.transaction_status?.status === "DONE";
+  const transactionLimit = moment(data?.transaction_status?.expired_at).diff(
+    Date.now()
+  );
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log("hai", limit);
-  //   }, limit);
-  // }, [limit]);
-
+  const handleFinishTransaction = async () => {
+    await axios.patch(`/api/transactions`, {
+      transactionId,
+      transaction_status: { status: "FINISHED" },
+    });
+    await axios.patch(`/api/transactions`, {
+      transactionId,
+      transaction_status: { status: "FINISHED" },
+    });
+    await axios.post(`/api/${data?.userId}/balance`, {
+      transactionId,
+      role: data?.role,
+      amount: (data?.price ?? 0) + (data?.selectedShipper?.price ?? 0),
+      from: data?.reciever?.email,
+      to: data?.sender?.email,
+      transactionUserId: data?.userId,
+      type: "income",
+      status: "DONE",
+    });
+  };
   if (isLoading) {
     return <p>loading...</p>;
   }
@@ -50,7 +66,9 @@ export default function SingleTransaction({
   //000 third 0 mean transaction type created, 1 means shippent, 2 means payment
 
   const status =
-    data.status === "000"
+    data.transaction_status?.status === "FINISHED"
+      ? { message: "completed", status: "ok" }
+      : data.status === "000"
       ? { message: "transaction created", status: "ok" }
       : data.status === "001"
       ? { message: "shipper selected", status: "ok" }
@@ -101,36 +119,46 @@ export default function SingleTransaction({
           <CreatePayment transactionId={transactionId} />
           <CreateProductDetail data={data} />
 
-          <Countdown
-            autoStart
-            date={new Date(Date.now() + 5000)}
-            renderer={(count) => {
-              setTimeout(() => {
-                count.api.start();
-              }, 100);
-              if (count.completed) {
-                return <Badge className="bg-red-300 !py-0">Expired</Badge>;
-              }
-              return (
-                <div className=" relative flex space-x-2">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button>Finish Transaction</Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        this transaction will automaticly finish within 24 hours
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+          {!isPackageArrived ? (
+            <Countdown
+              autoStart
+              date={new Date(Date.now() + transactionLimit)}
+              renderer={(count) => {
+                setTimeout(() => {
+                  count.api.start();
+                }, 100);
+                if (count.completed) {
+                  // handleFinishTransaction();
+                  return (
+                    <Button onClick={handleFinishTransaction} className="!py-0">
+                      Transaction Completed
+                    </Button>
+                  );
+                }
+                return (
+                  <div className=" relative flex space-x-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button onClick={handleFinishTransaction}>
+                            Finish Transaction
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          this transaction will automaticly finish within 24
+                          hours
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
 
-                  <Badge>
-                    {count.hours}:{count.minutes}:{count.seconds}
-                  </Badge>
-                </div>
-              );
-            }}
-          ></Countdown>
+                    <Badge>
+                      {count.hours}:{count.minutes}:{count.seconds}
+                    </Badge>
+                  </div>
+                );
+              }}
+            ></Countdown>
+          ) : null}
         </div>
       </div>
     </>

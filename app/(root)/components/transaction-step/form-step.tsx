@@ -31,7 +31,8 @@ interface FormStepProps {
   onSubmit: (variable?: any) => void;
   secondaryAction?: () => void;
   onCancel?: () => void;
-
+  title?: string;
+  subtitle?: string;
   role?: "sender" | "reciever";
 }
 
@@ -48,7 +49,12 @@ const FormSchemaUser = z.object({
   // .refine(validator.isMobilePhone)
 });
 
-export default function FormStep({ onSubmit, onCancel }: FormStepProps) {
+export default function FormStep({
+  onSubmit,
+  onCancel,
+  title,
+  subtitle,
+}: FormStepProps) {
   const { user } = useUser();
   const [tabs, setTabs] = useState<"user" | "address">("user");
   const [address, setAddress] = useState<AddressData>();
@@ -88,9 +94,9 @@ export default function FormStep({ onSubmit, onCancel }: FormStepProps) {
   return (
     <>
       <DialogHeader>
-        <DialogTitle>New Contact</DialogTitle>
+        <DialogTitle>{title ?? "New Contact"}</DialogTitle>
         <DialogDescription>
-          can you help me fill this contact data?
+          {subtitle ?? "can you help me fill this contact data?"}
         </DialogDescription>
       </DialogHeader>
       <Tabs defaultValue="user" value={tabs}>
