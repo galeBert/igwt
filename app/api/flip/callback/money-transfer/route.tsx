@@ -45,7 +45,11 @@ export async function POST(req: Request, res: Response) {
       querySnapshot.forEach((doc) => {
         selectedTransaction = { ...doc.data(), fBaseId: doc.id };
       });
-      console.log(selectedTransaction, data);
+      console.log(selectedTransaction, data, {
+        test: userId,
+        test2: userId1,
+        test3: idem,
+      });
 
       if (selectedTransaction) {
         const washingtonRef = doc(
