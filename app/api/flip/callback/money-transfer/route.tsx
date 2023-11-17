@@ -31,13 +31,10 @@ export async function POST(req: Request, res: Response) {
 
     if (translatedData) {
       const data = JSON.parse(translatedData);
-      const idem = data.idempotency_key;
-      const idem2 = data.idempotency_key.split("-");
-      const userId = data.idempotency_key.split("-")[4];
-      const userId1 = data.idempotency_key.split("-")[3];
+      const userId = data.idempotency_key.split("-")[3];
 
       const q = query(
-        collection(db, `user/user_${userId}/balance`),
+        collection(db, `user/${userId}/balance`),
         where("flipId", "==", data.id)
       );
       let selectedTransaction: any;
@@ -47,15 +44,12 @@ export async function POST(req: Request, res: Response) {
       });
       console.log(selectedTransaction, data, {
         test: userId,
-        test2: userId1,
-        test3: idem,
-        test4: idem2,
       });
 
       if (selectedTransaction) {
         const washingtonRef = doc(
           db,
-          `user/user_${data.remark}/balance`,
+          `user/${userId}/balance`,
           selectedTransaction?.fBaseId
         );
         const newData = {
@@ -70,11 +64,7 @@ export async function POST(req: Request, res: Response) {
         //   { method: "GET" }
         // );
 
-        return NextResponse.json({
-          test: userId,
-          test2: userId1,
-          test3: idem,
-        });
+        return NextResponse.json(newData);
       }
       return NextResponse.json(null);
     }
