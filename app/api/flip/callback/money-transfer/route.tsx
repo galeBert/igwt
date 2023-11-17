@@ -40,6 +40,8 @@ export async function POST(req: Request, res: Response) {
       querySnapshot.forEach((doc) => {
         selectedTransaction = { ...doc.data(), fBaseId: doc.id };
       });
+      console.log(selectedTransaction, data);
+
       if (selectedTransaction) {
         const washingtonRef = doc(
           db,
@@ -58,7 +60,7 @@ export async function POST(req: Request, res: Response) {
         //   { method: "GET" }
         // );
 
-        return NextResponse.json(null);
+        return NextResponse.json(selectedTransaction);
       }
     }
     return NextResponse.json(null);
