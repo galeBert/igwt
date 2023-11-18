@@ -46,8 +46,8 @@ export default function AvatarDetails({ badge, userData }: AvatarDetailProps) {
                 <div className="space-y-1">
                   <h4 className="text-sm font-semibold">{userData.name}</h4>
                   <p className="text-sm">
-                    {userData.city.text},{userData.district.text},
-                    {userData.province.text},{userData.postalCode.text}
+                    {userData.city?.text},{userData.district?.text},
+                    {userData.province?.text},{userData.postalCode?.text}
                   </p>
                   <div className="flex items-center pt-2">
                     <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}

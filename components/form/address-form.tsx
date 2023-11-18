@@ -204,7 +204,7 @@ export default function AddressForm({
                             aria-expanded={open[fieldList.name]}
                             className="w-full justify-between"
                           >
-                            {form.watch(fieldList.name).text ??
+                            {form.watch(fieldList.name)?.text ??
                               `Select ${fieldList.name}...`}
                           </Button>
                         </PopoverTrigger>
@@ -228,7 +228,7 @@ export default function AddressForm({
                                         }));
                                       }}
                                     >
-                                      {prov.text}
+                                      {prov?.text}
                                     </CommandItem>
                                   );
                                 })}

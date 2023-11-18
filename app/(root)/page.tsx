@@ -44,16 +44,8 @@ export default async function Home() {
                 src="https://firebasestorage.googleapis.com/v0/b/igwt-3b1a7.appspot.com/o/main-bg-a-purple.png?alt=media&token=521dd959-f53e-4d3c-b92e-53218536d2fc&_gl=1*1i2zkyu*_ga*NTY0Mjc2NzI5LjE2OTU1NjQzNDg.*_ga_CW55HF8NVT*MTY5OTY5MzU4OS42My4xLjE2OTk2OTUzMjEuNDYuMC4w"
               />
             </div>
-            <CardContent className="backdrop-blur-2xl relative w-fit m-5 px-0 rounded-lg">
-              {/* <div className="bg-white absolute w-full h-full left-0 rounded-md opacity-5" /> */}
-              <CardHeader>
-                <CardTitle className="text-xl">Balance</CardTitle>
-                <CardTitle>
-                  {formatter.format(useUserData.getState().balance)}
-                </CardTitle>
-              </CardHeader>
-              <MainCard user={fUserData} userId={userId ?? ""} />
-            </CardContent>
+
+            <MainCard user={fUserData} userId={userId ?? ""} />
           </Card>
         </div>
         <TransactionTable userId={userId} />

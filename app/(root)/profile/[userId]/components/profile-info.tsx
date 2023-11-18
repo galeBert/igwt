@@ -35,7 +35,7 @@ export default function ProfileInfo({ data }: ProfileInfo) {
   const onSubmit = async (variables: AddressData) => {
     const { postalCode, ...rest } = variables;
     const locationResult = await axios.post(`/api/biteship/maps`, {
-      query: postalCode.text,
+      query: postalCode?.text,
     });
     if (locationResult.data.length) {
       trigger(

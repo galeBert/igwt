@@ -26,7 +26,7 @@ import qs from "query-string";
 
 export async function POST(req: Request, res: Response) {
   try {
-    const data = await req.text();
+    const data = await req?.text();
     const translatedData = qs.parse(data).data as string;
 
     if (translatedData) {
