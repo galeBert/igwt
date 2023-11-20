@@ -30,40 +30,33 @@ import useSWR from "swr";
 interface CreateShipperProps {
   transactionId: string;
   bank?: string;
-  data: TTransactionData;
 }
 
-export default function CreateShipper({
-  transactionId,
-  data,
-}: CreateShipperProps) {
-  const {
-    data: datas,
-    error,
-    isLoading,
-    mutate,
-  } = useSWR(`single-transaction`, () => getTransaction(transactionId));
+export default function CreateShipper({ transactionId }: CreateShipperProps) {
+  const { data, error, isLoading, mutate } = useSWR(`single-transaction`, () =>
+    getTransaction(transactionId)
+  );
   const [loading, setLoading] = useState(false);
 
   const [open, setOpen] = useState(false);
   const { user } = useUser();
-  const isSender = data.userId === user?.id && data.role === "sender";
+  const isSender = data?.userId === user?.id && data?.role === "sender";
 
   const handleUpdateTransaction = async () => {
     setLoading(true);
-    if (!data.shipping && data) {
+    if (!data?.shipping && data) {
       const shipdata = await axios.post("/api/biteship/courier-rate", {
-        origin_area_id: data.sender?.address_id,
-        destination_area_id: data.reciever?.address_id,
+        origin_area_id: data?.sender?.address_id,
+        destination_area_id: data?.reciever?.address_id,
         items: [
           {
-            name: data.package_detail?.name,
-            description: data.package_detail?.description,
+            name: data?.package_detail?.name,
+            description: data?.package_detail?.description,
             value: 0,
             length: 10,
             width: 10,
-            height: data.package_detail?.height,
-            weight: data.package_detail?.weight,
+            height: data?.package_detail?.height,
+            weight: data?.package_detail?.weight,
             quantity: 1,
           },
         ],
@@ -71,7 +64,7 @@ export default function CreateShipper({
 
       await axios.patch(`/api/transactions`, {
         transactionId,
-        shipping: { ...shipdata.data },
+        shipping: { ...shipdata?.data },
       });
     }
     mutate();
@@ -82,21 +75,21 @@ export default function CreateShipper({
     setLoading(true);
     if (data) {
       await axios
-        .patch(`/api/transaction/${data.id}`, {
+        .patch(`/api/transaction/${data?.id}`, {
           transactionId,
           selectedShipper: { ...selected },
           status: "001",
         })
         .then(async () => {
-          await axios.post(`/api/transaction/${data.id}/transaction-log`, {
-            role: data.role,
+          await axios.post(`/api/transaction/${data?.id}/transaction-log`, {
+            role: data?.role,
             description: `already selected shipping to ${selected.company} `,
             status: "complete",
           });
         })
         .catch(async () => {
-          await axios.post(`/api/transaction/${data.id}/transaction-log`, {
-            role: data.role,
+          await axios.post(`/api/transaction/${data?.id}/transaction-log`, {
+            role: data?.role,
             description: `already selected shipping to ${selected.company} `,
             status: "failed",
           });
@@ -110,12 +103,12 @@ export default function CreateShipper({
   const handleRequestPickup = async () => {
     setLoading(true);
     if (
-      datas?.sender &&
-      datas?.reciever &&
-      datas.selectedShipper &&
-      datas?.package_detail
+      data?.sender &&
+      data?.reciever &&
+      data.selectedShipper &&
+      data?.package_detail
     ) {
-      const { sender, reciever, package_detail, selectedShipper } = datas;
+      const { sender, reciever, package_detail, selectedShipper } = data;
       await createOrder({
         packageItems: [package_detail],
         reciever,
@@ -130,9 +123,9 @@ export default function CreateShipper({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {data.selectedShipper &&
-      data.payment?.bill_payment.status === "SUCCESSFUL" &&
-      !data.shipping_status &&
+      {data?.selectedShipper &&
+      data?.payment?.bill_payment.status === "SUCCESSFUL" &&
+      !data?.shipping_status &&
       isSender ? (
         <Button
           disabled={loading}
@@ -163,7 +156,7 @@ export default function CreateShipper({
       {!isSender ? (
         <DialogTrigger onClick={handleUpdateTransaction} asChild>
           <Button className="space-x-1">
-            {datas?.selectedShipper ? (
+            {data?.selectedShipper ? (
               <>
                 <CheckCircledIcon className="bg-green-600 rounded-full text-white w-5 h-5 " />
                 <p>Shippier Selected</p>
@@ -195,7 +188,7 @@ export default function CreateShipper({
           <Card>
             <CardContent>
               <Accordion type="single" collapsible className="w-full">
-                {datas?.shipping?.pricing.map((shipper, key) => {
+                {data?.shipping?.pricing.map((shipper, key) => {
                   return (
                     <AccordionItem key={key} value={shipper.courier_name}>
                       <AccordionTrigger>

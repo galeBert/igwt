@@ -23,7 +23,7 @@ import { mutate } from "swr";
 interface CreatePaymentProps {
   userId?: string;
   bank?: string;
-  data: TTransactionData;
+  data?: TTransactionData;
 }
 const bankList = [
   {
@@ -59,14 +59,14 @@ export default function CreateProductDetail({
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState(0);
-  const [name, setName] = useState(data.package_detail?.name ?? "");
-  const [weight, setWeight] = useState(data.package_detail?.weight ?? 0);
-  const [height, setHeight] = useState(data.package_detail?.height ?? 0);
+  const [name, setName] = useState(data?.package_detail?.name ?? "");
+  const [weight, setWeight] = useState(data?.package_detail?.weight ?? 0);
+  const [height, setHeight] = useState(data?.package_detail?.height ?? 0);
   const [description, setDescription] = useState(
-    data.package_detail?.description ?? ""
+    data?.package_detail?.description ?? ""
   );
   const { user } = useUser();
-  const isSender = data.userId === user?.id && data.role === "sender";
+  const isSender = data?.userId === user?.id && data?.role === "sender";
 
   const handleUpdatePackagedetail = async () => {
     setLoading(true);
@@ -88,7 +88,7 @@ export default function CreateProductDetail({
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {!isSender || !data.package_detail?.weight ? (
+      {!isSender || !data?.package_detail?.weight ? (
         <DialogTrigger asChild>
           <Button>Add product detail</Button>
         </DialogTrigger>
@@ -107,7 +107,7 @@ export default function CreateProductDetail({
               <div className="flex space-x-2 items-center">
                 <Label className="text-lg  text-slate-600">Rp.</Label>
                 <Input
-                  defaultValue={data.price}
+                  defaultValue={data?.price}
                   onChange={(e) => setPrice(Number(e.currentTarget.value))}
                   type="number"
                 />
@@ -121,7 +121,7 @@ export default function CreateProductDetail({
                 <Label>Name</Label>
                 <div className="flex space-x-3 items-center">
                   <Input
-                    defaultValue={data.package_detail?.name}
+                    defaultValue={data?.package_detail?.name}
                     onChange={(e) => setName(e.currentTarget.value)}
                   />
                 </div>
@@ -130,7 +130,7 @@ export default function CreateProductDetail({
                 <Label>Weight</Label>
                 <div className="flex space-x-3 items-center">
                   <Input
-                    defaultValue={data.package_detail?.weight}
+                    defaultValue={data?.package_detail?.weight}
                     onChange={(e) => setWeight(Number(e.currentTarget.value))}
                     type="number"
                     className="w-20"
@@ -142,7 +142,7 @@ export default function CreateProductDetail({
                 <Label>Height</Label>
                 <div className="flex space-x-3 items-center ">
                   <Input
-                    defaultValue={data.package_detail?.height}
+                    defaultValue={data?.package_detail?.height}
                     onChange={(e) => setHeight(Number(e.currentTarget.value))}
                     type="number"
                     className="w-20"
@@ -155,7 +155,7 @@ export default function CreateProductDetail({
               <Label>Description</Label>
               <div className="flex space-x-3 items-center">
                 <Input
-                  defaultValue={data.package_detail?.description}
+                  defaultValue={data?.package_detail?.description}
                   onChange={(e) => setDescription(e.currentTarget.value)}
                 />
               </div>

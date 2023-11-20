@@ -11,6 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 import useSWR from "swr";
 
@@ -21,7 +22,6 @@ export default function StatusPage({ transactionId }: StatusPageInterface) {
   const { data, error, isLoading } = useSWR(`single-transaction`, () =>
     getTransaction(transactionId)
   );
-  console.log(data);
 
   return (
     <Card className="w-full">
@@ -39,8 +39,11 @@ export default function StatusPage({ transactionId }: StatusPageInterface) {
         <Card className="p-2 w-full flex flex-col space-y-2 justify-between">
           <div className="flex justify-between items-end">
             <CardDescription>Package:</CardDescription>
-
-            <Label>{data?.package_detail?.name}</Label>
+            {data?.package_detail?.name ? (
+              <Label>{data?.package_detail?.name}</Label>
+            ) : (
+              <Link href={data?.link ?? ""}>{data?.link}</Link>
+            )}
           </div>
           <div className="flex justify-between">
             <CardDescription>Shipper:</CardDescription>

@@ -3,10 +3,16 @@
 import { useUserData } from "@/hooks/useUserData";
 import { useRef } from "react";
 
-function StoreInitializer({ balance }: { balance: number }) {
+function StoreInitializer({
+  balance,
+  userId,
+}: {
+  balance: number;
+  userId: string;
+}) {
   const initialized = useRef(false);
   if (!initialized.current) {
-    useUserData.setState({ balance });
+    useUserData.setState({ balance, userId });
     initialized.current = true;
   }
   return null;

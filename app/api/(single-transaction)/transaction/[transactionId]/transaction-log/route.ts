@@ -50,7 +50,6 @@ export async function GET(
   { params }: { params: { transactionId: string } }
 ) {
   try {
-    console.log(params.transactionId);
     const ref = collection(
       db,
       `transactions/${params.transactionId}/transaction-log`

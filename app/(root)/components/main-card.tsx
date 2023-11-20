@@ -36,23 +36,26 @@ export default function MainCard({ user, userId }: MainCardProps) {
     addAddressData();
   };
 
-  const handleCashout = () => {};
   return (
     <>
-      <CardContent className="backdrop-blur-2xl relative w-fit m-5 px-0 rounded-lg">
-        {/* <div className="bg-white absolute w-full h-full left-0 rounded-md opacity-5" /> */}
-        <CardHeader>
+      <CardContent
+        className={`backdrop-blur-sm  md:backdrop-blur-2xl relative w-full 
+        md:w-fit
+        md:m-5
+        md:pb-0
+        p-0
+        rounded-lg`}
+      >
+        <div className="bg-white absolute w-full h-full left-0 rounded-md opacity-5" />
+        <CardHeader className="w-full">
           <CardTitle className="text-xl">Balance</CardTitle>
           <CardTitle>{formatter.format(balance)}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 ">
           <CardDescription>What are you gonna do today?</CardDescription>
           <div className="space-x-3">
             <Button onClick={handleCreateTransaction}>Create new order</Button>
             <CashOutMoneyModal userId={userId} />
-            <Button onClick={handleCashout} variant="secondary">
-              Cash out Money
-            </Button>
           </div>
         </CardContent>
         <AddUserAddresModal onSubmit={() => {}} />

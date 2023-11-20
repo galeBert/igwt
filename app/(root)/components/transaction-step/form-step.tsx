@@ -26,6 +26,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AddressForm, { AddressData } from "@/components/form/address-form";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
+import useSWRMutation from "swr/mutation";
+import { createContact } from "@/actions/create-contact";
 
 interface FormStepProps {
   onSubmit: (variable?: any) => void;
@@ -58,36 +60,38 @@ export default function FormStep({
   const { user } = useUser();
   const [tabs, setTabs] = useState<"user" | "address">("user");
   const [address, setAddress] = useState<AddressData>();
-  const [loading, setLoading] = useState(false);
   const formUser = useForm<z.infer<typeof FormSchemaUser>>({
     resolver: zodResolver(FormSchemaUser),
   });
+
+  const { trigger, isMutating } = useSWRMutation(
+    `/api/${user?.id}/contact`,
+    createContact
+  );
   const name = formUser.watch("username");
   const email = formUser.watch("email");
 
   const handleSubmit = () => {
     onSubmit(formUser.getValues());
-
     setTabs("address");
   };
 
   const handleSubmitAddress = async (variables: AddressData) => {
-    setLoading(true);
-    onSubmit({ ...formUser.getValues(), ...variables });
     if (variables) {
       const locationResult = await axios.post(`/api/biteship/maps`, {
-        query: variables.postalCode,
+        query: variables.postalCode.text,
       });
+
       if (locationResult.data.length) {
-        axios.post(`/api/${user?.id}/contact`, {
-          ...locationResult.data[0],
-          ...variables,
-          name,
-          email,
-        });
+        trigger({ ...locationResult.data[0], ...variables, name, email });
+        // axios.post(`/api/${user?.id}/contact`, {
+        //   ...locationResult.data[0],
+        //   ...variables,
+        //   name,
+        //   email,
+        // });
       }
     }
-    setLoading(false);
     onCancel?.();
   };
 
@@ -154,7 +158,7 @@ export default function FormStep({
         </TabsContent>
         <TabsContent value="address">
           <AddressForm
-            loading={loading}
+            loading={isMutating}
             onChange={setAddress}
             onSubmit={handleSubmitAddress}
             secondaryActionLabel="Back"

@@ -23,6 +23,8 @@ export default function RecieverCreateTransactionModal({
   };
 
   const onNext = () => {
+    console.log("aaa");
+
     setStep((value) => value + 1);
   };
   const onContactSecondaryAction = () => {

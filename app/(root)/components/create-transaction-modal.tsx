@@ -28,8 +28,8 @@ export default function CreateTransactionModal({
   const handleAddContact = (variable: any) => {
     // console.log(variable);
     // if (user) {
-    // setIsAddContactOpen(false);
-    // axios.post(`/api/${user.id}/contact`, variable);
+    //   setIsAddContactOpen(false);
+    //   axios.post(`/api/${user.id}/contact`, variable);
     // }
   };
 

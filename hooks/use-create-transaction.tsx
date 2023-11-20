@@ -14,6 +14,7 @@ export interface UserData extends AddressData {
   name: string;
   email: string;
   balance: number;
+  userId: string;
 }
 
 export type TTransactionData = {

@@ -56,41 +56,39 @@ export default function SingleTransaction({
       status: "DONE",
     });
   };
-  if (isLoading) {
-    return <p>loading...</p>;
-  }
-  if (!data) {
+
+  if (!data && !isLoading) {
     return <p>transaction not found</p>;
   }
   //000 second 0 mean transaction status success,010 second 1 mean transaction pending,020 second 2 mean transaction fail
   //000 third 0 mean transaction type created, 1 means shippent, 2 means payment
 
   const status =
-    data.transaction_status?.status === "FINISHED"
+    data?.transaction_status?.status === "FINISHED"
       ? { message: "completed", status: "ok" }
-      : data.status === "000"
+      : data?.status === "000"
       ? { message: "transaction created", status: "ok" }
-      : data.status === "001"
+      : data?.status === "001"
       ? { message: "shipper selected", status: "ok" }
-      : data.status === "012"
+      : data?.status === "012"
       ? { message: "waiting payment to complete", status: "pending" }
-      : data.status === "002"
+      : data?.status === "002"
       ? { message: "payment complete", status: "ok" }
-      : data.status === "022"
+      : data?.status === "022"
       ? { message: "payment failed", status: "fail" }
-      : data.status === "003"
+      : data?.status === "003"
       ? { message: "ready for pickup", status: "ok" }
-      : data.status === "013"
+      : data?.status === "013"
       ? { message: "requesting pickup", status: "pending" }
-      : data.status === "023"
+      : data?.status === "023"
       ? { message: "pickup canceled", status: "fail" }
-      : data.status === "114"
+      : data?.status === "114"
       ? { message: "courier picking up", status: "pending" }
-      : data.status === "214"
+      : data?.status === "214"
       ? { message: "picked up", status: "pending" }
-      : data.status === "314"
+      : data?.status === "314"
       ? { message: "sending package", status: "pending" }
-      : data.status === "004"
+      : data?.status === "004"
       ? { message: "package send", status: "ok" }
       : { message: "transaction not found", status: "fail" };
 
@@ -115,7 +113,7 @@ export default function SingleTransaction({
         </div>
 
         <div className="flex space-x-2 ">
-          <CreateShipper transactionId={transactionId} data={data} />
+          <CreateShipper transactionId={transactionId} />
           <CreatePayment transactionId={transactionId} />
           <CreateProductDetail data={data} />
 

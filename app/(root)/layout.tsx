@@ -16,7 +16,7 @@ export default async function layout({ children }: { children: ReactNode }) {
       <Navbar userData={translatedUserData} />
 
       <div className=" space-x-2 flex">
-        <div className="w-1/4 space-y-4">
+        <div className="w-1/4 hidden lg:block space-y-4">
           <Separator className=" rounded-md" />
           <Sidebar />
         </div>

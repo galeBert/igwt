@@ -37,6 +37,7 @@ export async function POST(
       description,
       email,
     } = body;
+    console.log(body);
 
     await addDoc(collection(db, `user/${userId}/contact`), {
       province,

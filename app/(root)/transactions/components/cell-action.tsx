@@ -29,7 +29,6 @@ export default function CellAction({ data }: CellActionProps) {
   const onDelete = async () => {
     try {
       setIsLoading(true);
-      console.log("delete");
     } catch (error) {
     } finally {
       setIsLoading(false);

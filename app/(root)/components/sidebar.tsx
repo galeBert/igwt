@@ -22,7 +22,7 @@ export default function Sidebar() {
           <Link className="w-full" key={idx} href={nav.href}>
             <Button
               variant={pathname === nav.href ? "default" : "ghost"}
-              className="text-left w-full justify-start"
+              className="text-right flex justify-end lg:text-left w-full lg:justify-start"
             >
               {nav.name}
             </Button>

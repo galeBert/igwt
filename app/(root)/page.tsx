@@ -11,22 +11,27 @@ import MainCard from "./components/main-card";
 import TransactionTable from "./transactions/components/transaction-table";
 
 export default async function Home() {
-  // const { data } = useSWR("test", () => getUserData(userId ?? ""));
   const { userId } = auth();
   const fUserData = await getUserData(userId ?? "");
-  useUserData.setState({ balance: fUserData.balance });
+
+  useUserData.setState({
+    balance: fUserData.balance,
+    userId: fUserData.userId,
+  });
 
   return (
     <>
-      <StoreInitializer balance={fUserData.balance} />
+      <StoreInitializer balance={fUserData.balance} userId={fUserData.userId} />
       <div className="space-y-2">
         <div className="w-full">
           <Card className="relative overflow-hidden bg-center bg-cover hover:dark:bg-gray-900">
             <div className="absolute  w-full h-full flex flex-col justify-center px-20 items-end ">
-              <Label className="text-4xl  font-bold z-10">
+              <Label className="md:block hidden xl:text-4xl lg:text-3xl  font-bold z-10">
                 GET 20% CASHBACK
               </Label>
-              <Label className="text-2xl z-10">valid until: april 2024</Label>
+              <Label className="text-2xl z-10 md:block hidden">
+                valid until: april 2024
+              </Label>
             </div>
             <div className="absolute left-0 top-1 scale-110  h-full w-[300px] ">
               <Image

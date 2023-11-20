@@ -7,8 +7,9 @@ export async function GET(
   req: Request,
   { params }: { params: { userId: string } }
 ) {
-  const { userId } = params;
   try {
+    const { userId } = params;
+
     if (!userId) {
       return new NextResponse("User id is required", { status: 400 });
     }
@@ -17,7 +18,7 @@ export async function GET(
     const userData = await getDoc(docRef);
 
     if (userData.exists()) {
-      return NextResponse.json(userData.data());
+      return NextResponse.json({ ...userData.data(), userId });
     }
     return NextResponse.json(null);
   } catch (error) {

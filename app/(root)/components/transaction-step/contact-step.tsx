@@ -20,12 +20,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
 import { RadioGroup } from "@headlessui/react";
 import { Badge } from "@/components/ui/badge";
-import { useContact } from "@/hooks/use-contact";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserData } from "@/hooks/useUserData";
+import useSWR from "swr";
+import { getContact } from "@/actions/get-contact";
 
 interface ContantStepProps {
   onSubmit: () => void;
@@ -46,14 +48,21 @@ export default function ContactStep({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
+  const { userId } = useUserData();
+
+  const { data, isLoading } = useSWR("/api/contact", () =>
+    getContact(userId ?? "")
+  );
+
+  const contacts = data ?? [];
+
   const { transaction, setTransaction } = useCreateTransactionModal();
   const contact = form.watch("contact");
   const isContactSelected = !!form.watch("contact");
-  const { contacts, loading } = useContact();
 
   const oppositeRole = transaction.role === "sender" ? "reciever" : "sender";
   const handleSubmit = () => {
-    const selectedContact = contacts.find((data) => data.name === contact);
+    const selectedContact = contacts?.find((data) => data.name === contact);
     setTransaction({ [oppositeRole]: { ...selectedContact } });
     secondaryAction?.();
   };
@@ -79,7 +88,7 @@ export default function ContactStep({
                 <FormLabel>Contact</FormLabel>
                 <FormControl>
                   <RadioGroup className="space-y-3" onChange={field.onChange}>
-                    {loading ? (
+                    {isLoading ? (
                       <div className="flex items-center space-x-4">
                         <Skeleton className="h-12 w-12 rounded-full" />
                         <div className="space-y-2">

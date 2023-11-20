@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MoneyInput } from "@/components/ui/money-input";
 import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -33,22 +34,18 @@ const contacts = [
   { name: "endang", phoneNumber: "0812321", addres: "jl.walah" },
 ];
 const FormSchema = z.object({
-  ammount: z.number({
+  amount: z.number({
     required_error: "You need to select a notification type.",
   }),
 });
-export default function PaymentAmmount({
-  onSubmit,
-  secondaryAction,
-  onCancel,
-}: BankStepProps) {
+export default function PaymentAmmount({ onSubmit, onCancel }: BankStepProps) {
   const { setTransaction, transaction } = useCreateTransactionModal();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: { ammount: transaction.price ?? 0 },
+    defaultValues: { amount: transaction.price ?? 0 },
   });
 
-  const ammount = form.watch("ammount");
+  const ammount = form.watch("amount");
 
   const handleSubmit = () => {
     setTransaction({ price: ammount });
@@ -65,18 +62,28 @@ export default function PaymentAmmount({
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="ammount"
+            name="amount"
             render={({ field: { onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel>Amount</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Rp. 9.999.999"
-                    onChange={(e) => onChange(Number(e.currentTarget.value))}
-                    {...rest}
-                  />
-                </FormControl>
+                <div className="flex space-x-2 items-center">
+                  <FormDescription className="text-gray-400">
+                    Rp
+                  </FormDescription>
+
+                  <FormControl>
+                    <MoneyInput
+                      placeholder=" 9.999.999"
+                      onChange={(e) => {
+                        const translatedCurrency =
+                          e.currentTarget.value.split(".").join("") ?? 0;
+
+                        onChange(Number(translatedCurrency));
+                      }}
+                    />
+                  </FormControl>
+                </div>
+
                 <FormDescription>
                   This ammount is exclude shipping
                 </FormDescription>

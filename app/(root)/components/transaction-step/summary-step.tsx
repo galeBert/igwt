@@ -22,6 +22,7 @@ import AvatarDetails from "../avatar-details";
 import { redirect, useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { createTransaction } from "@/actions/create-transaction";
+import { createTransactionEmail } from "@/actions/create-transaction-email";
 interface SummaryStepProps {
   onCancel: () => void;
   onSubmit: () => void;
@@ -35,8 +36,23 @@ export default function SummaryStep({ onCancel, onSubmit }: SummaryStepProps) {
   const handleClick = async () => {
     setLoading(true);
     if (user) {
-      // const test = await axios.post(`/api/${user.id}/transaction`, transaction);
       createTransaction({ data: transaction, userId: user.id }).then((data) => {
+        createTransactionEmail({
+          inviteLink: data?.id,
+          productName: data?.package_detail?.name,
+          recieverEmail:
+            data?.role === "sender"
+              ? data?.reciever?.email
+              : data?.sender?.email,
+          senderName:
+            data?.role === "sender" ? data.sender?.name : data?.reciever?.name,
+          recieverName:
+            data?.role === "sender" ? data?.reciever?.name : data?.sender?.name,
+          senderEmail:
+            data?.role === "sender"
+              ? data?.sender?.email
+              : data?.reciever?.email,
+        });
         router.push(`/transactions/${data?.id}`);
         toast.success("success created new transaction!");
       });
