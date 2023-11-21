@@ -174,103 +174,105 @@ export default function AddressForm({
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleClick)} className="space-y-3">
-          {adressFieldList.map((fieldList, idx) => {
-            return (
-              <FormField
-                key={idx}
-                control={form.control}
-                name={fieldList.name}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {fieldList.name[0].toUpperCase() +
-                        fieldList.name.slice(1)}
-                    </FormLabel>
-                    <FormControl>
-                      <Popover
-                        open={open[fieldList.name]}
-                        onOpenChange={(openState) => {
-                          setOpen((e) => ({
-                            ...e,
-                            [fieldList.name]: openState,
-                          }));
-                        }}
-                      >
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open[fieldList.name]}
-                            className="w-full justify-between"
-                          >
-                            {form.watch(fieldList.name)?.text ??
-                              `Select ${fieldList.name}...`}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className=" p-0">
-                          <Command>
-                            <CommandInput placeholder="Search Province..." />
-                            <CommandEmpty>
-                              No {fieldList.name} found.
-                            </CommandEmpty>
-                            <ScrollArea>
-                              <CommandGroup className="h-36 overflow-scroll">
-                                {fieldList.data?.map((prov, idx) => {
-                                  return (
-                                    <CommandItem
-                                      key={idx}
-                                      onSelect={() => {
-                                        form.setValue(fieldList.name, prov);
-                                        setOpen((e) => ({
-                                          ...e,
-                                          [fieldList.name]: false,
-                                        }));
-                                      }}
-                                    >
-                                      {prov?.text}
-                                    </CommandItem>
-                                  );
-                                })}
-                              </CommandGroup>
-                            </ScrollArea>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            );
-          })}
-          <FormField
-            control={form.control}
-            name="street_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Street name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Jl. gelatik" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Additional info</FormLabel>
-                <FormControl>
-                  <Input placeholder="near statue..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex justify-end items-center w-full space-x-3">
+        <form onSubmit={form.handleSubmit(handleClick)} className="">
+          <div className="space-y-3 max-h-[350px] overflow-scroll">
+            {adressFieldList.map((fieldList, idx) => {
+              return (
+                <FormField
+                  key={idx}
+                  control={form.control}
+                  name={fieldList.name}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {fieldList.name[0].toUpperCase() +
+                          fieldList.name.slice(1)}
+                      </FormLabel>
+                      <FormControl>
+                        <Popover
+                          open={open[fieldList.name]}
+                          onOpenChange={(openState) => {
+                            setOpen((e) => ({
+                              ...e,
+                              [fieldList.name]: openState,
+                            }));
+                          }}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={open[fieldList.name]}
+                              className="w-full justify-between"
+                            >
+                              {form.watch(fieldList.name)?.text ??
+                                `Select ${fieldList.name}...`}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className=" p-0">
+                            <Command>
+                              <CommandInput placeholder="Search Province..." />
+                              <CommandEmpty>
+                                No {fieldList.name} found.
+                              </CommandEmpty>
+                              <ScrollArea>
+                                <CommandGroup className="h-36 overflow-scroll">
+                                  {fieldList.data?.map((prov, idx) => {
+                                    return (
+                                      <CommandItem
+                                        key={idx}
+                                        onSelect={() => {
+                                          form.setValue(fieldList.name, prov);
+                                          setOpen((e) => ({
+                                            ...e,
+                                            [fieldList.name]: false,
+                                          }));
+                                        }}
+                                      >
+                                        {prov?.text}
+                                      </CommandItem>
+                                    );
+                                  })}
+                                </CommandGroup>
+                              </ScrollArea>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              );
+            })}
+            <FormField
+              control={form.control}
+              name="street_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Street name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Jl. gelatik" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Additional info</FormLabel>
+                  <FormControl>
+                    <Input placeholder="near statue..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex justify-end items-center w-full space-x-3 pt-1s">
             {secondaryAction ? (
               <Button variant="secondary" onClick={secondaryAction}>
                 {secondaryActionLabel}

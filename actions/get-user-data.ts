@@ -6,7 +6,6 @@ const url = process.env.NEXT_PUBLIC_API_URL;
 export const getUserData = async (userId: string) => {
   const userData = await fetch(`${url}/api/${userId}`, {
     method: "GET",
-    cache: "no-cache",
   });
   const test = await userData.json();
   // const userData = await axios.get(`${url}/api/${userId}`);

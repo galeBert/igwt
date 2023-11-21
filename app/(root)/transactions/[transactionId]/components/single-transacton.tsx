@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useUserData } from "@/hooks/useUserData";
 import { axios } from "@/lib/axios";
 import clsx from "clsx";
 import moment from "moment";
@@ -27,6 +28,7 @@ interface SingleTransactionProps {
 export default function SingleTransaction({
   transactionId,
 }: SingleTransactionProps) {
+  const { userId } = useUserData();
   const { data, isLoading } = useSWR("single-transaction", () =>
     getTransaction(transactionId)
   );
@@ -91,6 +93,7 @@ export default function SingleTransaction({
       : data?.status === "004"
       ? { message: "package send", status: "ok" }
       : { message: "transaction not found", status: "fail" };
+  const isSender = data?.userId === userId && data?.role === "sender";
 
   return (
     <>
@@ -106,8 +109,8 @@ export default function SingleTransaction({
           {status.message}
         </Badge>
       </div>
-      <div className="flex flex-col w-full space-y-4">
-        <div className="grid grid-cols-2 space-x-4">
+      <div className="flex flex-col h-fit w-full space-y-4">
+        <div className="grid grid-cols-2 h-fit space-x-4">
           <StatusPage transactionId={transactionId} />
           <InfoPage transactionId={transactionId} />
         </div>
@@ -117,7 +120,7 @@ export default function SingleTransaction({
           <CreatePayment transactionId={transactionId} />
           <CreateProductDetail data={data} />
 
-          {!isPackageArrived ? (
+          {isPackageArrived && !isSender ? (
             <Countdown
               autoStart
               date={new Date(Date.now() + transactionLimit)}

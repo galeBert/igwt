@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +28,16 @@ import axios from "axios";
 import { useUser } from "@clerk/nextjs";
 import useSWRMutation from "swr/mutation";
 import { createContact } from "@/actions/create-contact";
+import { getSingleContact } from "@/actions/get-single-contact";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { SearchCheck } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface FormStepProps {
   onSubmit: (variable?: any) => void;
@@ -60,20 +70,33 @@ export default function FormStep({
   const { user } = useUser();
   const [tabs, setTabs] = useState<"user" | "address">("user");
   const [address, setAddress] = useState<AddressData>();
+  const [isSingleContactFound, setIsSingleContactFound] = useState(false);
   const formUser = useForm<z.infer<typeof FormSchemaUser>>({
     resolver: zodResolver(FormSchemaUser),
   });
 
-  const { trigger, isMutating } = useSWRMutation(
-    `/api/${user?.id}/contact`,
-    createContact
-  );
+  const {
+    trigger,
+    isMutating,
+    data: newlyCreatedContact,
+  } = useSWRMutation(`/api/${user?.id}/contact`, createContact);
+
+  const {
+    trigger: searchSingleContact,
+    data: singleContactData,
+    isMutating: isSearchingUser,
+  } = useSWRMutation(`/api/${user?.id}/contact`, getSingleContact);
+
   const name = formUser.watch("username");
   const email = formUser.watch("email");
 
   const handleSubmit = () => {
     onSubmit(formUser.getValues());
-    setTabs("address");
+    searchSingleContact({ email }).then((data) => {
+      if (!data) {
+        setTabs("address");
+      }
+    });
   };
 
   const handleSubmitAddress = async (variables: AddressData) => {
@@ -84,16 +107,23 @@ export default function FormStep({
 
       if (locationResult.data.length) {
         trigger({ ...locationResult.data[0], ...variables, name, email });
-        // axios.post(`/api/${user?.id}/contact`, {
-        //   ...locationResult.data[0],
-        //   ...variables,
-        //   name,
-        //   email,
-        // });
       }
     }
     onCancel?.();
   };
+  const handleSubmitExistAddress = async () => {
+    if (singleContactData) {
+      trigger({ ...singleContactData, name });
+    }
+    onCancel?.();
+  };
+  useEffect(() => {
+    if (singleContactData) {
+      setIsSingleContactFound(true);
+    } else {
+      setIsSingleContactFound(false);
+    }
+  }, [email, newlyCreatedContact, singleContactData]);
 
   return (
     <>
@@ -151,7 +181,53 @@ export default function FormStep({
                 <Button variant="secondary" onClick={onCancel}>
                   Back
                 </Button>
-                <Button type="submit">Next</Button>
+                <Popover
+                  open={isSingleContactFound}
+                  onOpenChange={setIsSingleContactFound}
+                >
+                  <PopoverTrigger asChild>
+                    <Button disabled={isSearchingUser} type="submit">
+                      {isSearchingUser ? "Searching..." : "Next"}
+                    </Button>
+                  </PopoverTrigger>
+                  {singleContactData ? (
+                    <PopoverContent className="space-y-2 translate-y-1/4">
+                      <div className="flex space-x-2 items-center">
+                        <SearchCheck width={24} />
+                        <div className="flex flex-col">
+                          <Label className="text-base">We found it!</Label>
+                          <Label className="text-gray-500">
+                            Your friend is on IGWT
+                          </Label>
+                        </div>
+                      </div>
+                      <Card>
+                        <CardContent className="pt-4 flex items-center space-x-2">
+                          <Avatar>
+                            <AvatarImage
+                              src="https://github.com/shadcn.png"
+                              alt="@shadcn"
+                            />
+                            <AvatarFallback>CN</AvatarFallback>
+                          </Avatar>
+                          <Label>{singleContactData.name}</Label>
+                          <Label>{singleContactData.email}</Label>
+                        </CardContent>
+                      </Card>
+                      <div className="w-full space-x-2 flex justify-end">
+                        <Button
+                          onClick={() => setIsSingleContactFound(false)}
+                          variant="secondary"
+                        >
+                          wrong person
+                        </Button>
+                        <Button onClick={handleSubmitExistAddress}>
+                          Continue
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  ) : null}
+                </Popover>
               </div>
             </form>
           </Form>

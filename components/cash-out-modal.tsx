@@ -77,9 +77,7 @@ export function CashOutMoneyModal({ userId }: { userId: string }) {
       },
       {
         onSuccess: () => {
-          setBalance(balance - amount);
-
-          toast.success("success");
+          toast.success("Request Send");
           setOpen(false);
           getUserData(userId);
         },

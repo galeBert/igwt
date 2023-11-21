@@ -8,14 +8,7 @@ import React from "react";
 import { ThemeButton } from "./theme-button";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 interface NavbarProps {
   userData?: User | null;
@@ -37,7 +30,7 @@ export default function Navbar({ userData }: NavbarProps) {
       </div>
       <Sheet>
         <SheetTrigger asChild className="block lg:hidden">
-          <Button variant="outline" className="px-2">
+          <Button variant="outline" size="icon">
             <HamburgerMenuIcon width={40} />
           </Button>
         </SheetTrigger>

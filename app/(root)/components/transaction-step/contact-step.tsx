@@ -79,13 +79,16 @@ export default function ContactStep({
       </DialogHeader>
       <Button onClick={onSubmit}>+ New Contact</Button>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 ">
           <FormField
             control={form.control}
             name="contact"
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel>Contact</FormLabel>
+                <div className="float-none space-x-2">
+                  <FormLabel>Contact</FormLabel>
+                  <Badge>{contacts.length}</Badge>
+                </div>
                 <FormControl>
                   <RadioGroup className="space-y-3" onChange={field.onChange}>
                     {isLoading ? (
@@ -97,38 +100,40 @@ export default function ContactStep({
                         </div>
                       </div>
                     ) : (
-                      contacts.map((contact, idx) => {
-                        return (
-                          <RadioGroup.Option key={idx} value={contact.name}>
-                            {({ active, checked }) => (
-                              <Card
-                                className={cn(
-                                  "flex space-x-2 py-1 px-2 items-center",
-                                  active
-                                    ? "ring-2 dark:ring-white ring-black outline-2 outline-black dark:outline-white"
-                                    : "",
-                                  checked
-                                    ? "border-black dark:border-white outline-2"
-                                    : ""
-                                )}
-                              >
-                                <Avatar>
-                                  <AvatarImage
-                                    src="https://github.com/shadcn.png"
-                                    alt="@shadcn"
-                                  />
-                                  <AvatarFallback>
-                                    {contact.name.slice(0, 1).toUpperCase()}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <span>{contact.name}</span>
-                                </div>
-                              </Card>
-                            )}
-                          </RadioGroup.Option>
-                        );
-                      })
+                      <div className="max-h-[250px] space-y-3  overflow-scroll">
+                        {contacts.map((contact, idx) => {
+                          return (
+                            <RadioGroup.Option key={idx} value={contact.name}>
+                              {({ active, checked }) => (
+                                <Card
+                                  className={cn(
+                                    "flex space-x-2 py-1 px-2 items-center",
+                                    active
+                                      ? "ring-2 dark:ring-white ring-black outline-2 outline-black dark:outline-white"
+                                      : "",
+                                    checked
+                                      ? "border-black dark:border-white outline-2"
+                                      : ""
+                                  )}
+                                >
+                                  <Avatar>
+                                    <AvatarImage
+                                      src="https://github.com/shadcn.png"
+                                      alt="@shadcn"
+                                    />
+                                    <AvatarFallback>
+                                      {contact.name.slice(0, 1).toUpperCase()}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div>
+                                    <span>{contact.name}</span>
+                                  </div>
+                                </Card>
+                              )}
+                            </RadioGroup.Option>
+                          );
+                        })}
+                      </div>
                     )}
                   </RadioGroup>
                 </FormControl>

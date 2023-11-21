@@ -1,27 +1,19 @@
 import { getUserData } from "@/actions/get-user-data";
 import StoreInitializer from "@/components/store-initializer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useUserData } from "@/hooks/useUserData";
-import { formatter } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import Image from "next/image";
+import CashTransactionTable from "./cash-out/components/transaction-table";
 import CreateTransactionModal from "./components/create-transaction-modal";
 import MainCard from "./components/main-card";
-import TransactionTable from "./transactions/components/transaction-table";
-
 export default async function Home() {
   const { userId } = auth();
   const fUserData = await getUserData(userId ?? "");
 
-  useUserData.setState({
-    balance: fUserData.balance,
-    userId: fUserData.userId,
-  });
-
   return (
     <>
-      <StoreInitializer balance={fUserData.balance} userId={fUserData.userId} />
       <div className="space-y-2">
         <div className="w-full">
           <Card className="relative overflow-hidden bg-center bg-cover hover:dark:bg-gray-900">
@@ -45,7 +37,6 @@ export default async function Home() {
               <Image
                 fill
                 alt="main-bg-a-purple"
-                // className="blur-[1px]"
                 src="https://firebasestorage.googleapis.com/v0/b/igwt-3b1a7.appspot.com/o/main-bg-a-purple.png?alt=media&token=521dd959-f53e-4d3c-b92e-53218536d2fc&_gl=1*1i2zkyu*_ga*NTY0Mjc2NzI5LjE2OTU1NjQzNDg.*_ga_CW55HF8NVT*MTY5OTY5MzU4OS42My4xLjE2OTk2OTUzMjEuNDYuMC4w"
               />
             </div>
@@ -53,7 +44,7 @@ export default async function Home() {
             <MainCard user={fUserData} userId={userId ?? ""} />
           </Card>
         </div>
-        <TransactionTable userId={userId} />
+        <CashTransactionTable userId={userId} />
       </div>
       <CreateTransactionModal fUserData={fUserData} />
     </>

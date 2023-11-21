@@ -10,6 +10,7 @@ import {
   getDocs,
   query,
   setDoc,
+  where,
 } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
@@ -26,18 +27,17 @@ export async function POST(
 
     const body = await req.json();
     const {
-      province,
+      postalcode,
+      email,
+      address_id,
+      formated_address,
       district,
       city,
-      address_id,
-      postalcode,
+      province,
       name,
-      formated_address,
       street_name,
       description,
-      email,
     } = body;
-    console.log(body);
 
     await addDoc(collection(db, `user/${userId}/contact`), {
       province,
@@ -62,27 +62,47 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } }
+  {
+    params,
+    searchParams,
+  }: {
+    params: { userId: string };
+    searchParams?: { [key: string]: string | string[] | undefined };
+  }
 ) {
   const { userId } = params;
   try {
     if (!userId) {
       return new NextResponse("User id is required", { status: 400 });
     }
+    const url = new URL(req.url);
+    const searchParams = new URLSearchParams(url.search);
+    const email = searchParams.get("email");
+    //get single contact
+    if (email) {
+      const q = query(collection(db, "user"), where("email", "==", email));
 
+      let singleContact = null;
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        singleContact = doc.data();
+      });
+      return NextResponse.json(singleContact);
+    }
+    //get multiple contact
     const q = query(collection(db, `user/${userId}/contact`));
 
     const querySnapshot = await getDocs(q);
 
-    let test: DocumentData[] = [];
+    let contacts: DocumentData[] = [];
 
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       // console.log(doc.id, " => ", doc.data());
-      test.push({ ...doc.data(), id: doc.id });
+      contacts.push({ ...doc.data(), id: doc.id });
     });
 
-    return NextResponse.json(test);
+    return NextResponse.json(contacts);
   } catch (error) {
     return NextResponse.json(error);
   }

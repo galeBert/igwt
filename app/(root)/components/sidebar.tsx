@@ -12,6 +12,7 @@ export default function Sidebar() {
   const navList = [
     { name: "Dashboard", href: "/" },
     { name: "Transaction", href: "/transactions" },
+    { name: "Cash Log", href: "/cash-out" },
     { name: "Profile", href: `/profile/${user?.id}` ?? "" },
   ];
 

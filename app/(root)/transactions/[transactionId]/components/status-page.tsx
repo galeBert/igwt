@@ -24,7 +24,7 @@ export default function StatusPage({ transactionId }: StatusPageInterface) {
   );
 
   return (
-    <Card className="w-full">
+    <Card className="w-full h-fit">
       <CardContent className="">
         <div className="flex p-2 py-5 w-full justify-center items-center space-x-6">
           {data?.sender && data?.reciever ? (

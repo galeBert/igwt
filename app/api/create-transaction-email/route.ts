@@ -17,8 +17,9 @@ export async function POST(req: Request, res: NextApiResponse) {
       senderName,
       senderPhoto,
     } = body;
+
     const data = await resend.emails.send({
-      from: `albert@igwt.space`,
+      from: "aaa",
       to: [recieverEmail],
       subject: `Join ${senderEmail} on IGWT`,
       react: EmailTemplate({

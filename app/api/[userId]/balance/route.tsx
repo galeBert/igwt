@@ -105,13 +105,13 @@ export async function GET(
     });
 
     const income = transactionHistory
-      .filter((value) => value.type === "income")
+      .filter((value) => value.type === "income" && value.status === "DONE")
       .reduce(function (acc, obj) {
         return acc + obj.amount;
       }, 0);
 
     const outcome = transactionHistory
-      .filter((value) => value.type === "outcome")
+      .filter((value) => value.type === "outcome" && value.status === "DONE")
       .reduce(function (acc, obj) {
         return acc + obj.amount;
       }, 0);

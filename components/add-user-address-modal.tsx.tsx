@@ -67,6 +67,7 @@ export default function AddUserAddresModal({
   );
 
   const onSubmit2 = async (variables: AddressData) => {
+    setLoading(true);
     const { postalCode, ...rest } = variables;
     const locationResult = await axios.post(`/api/biteship/maps`, {
       query: postalCode?.text,
@@ -80,11 +81,19 @@ export default function AddUserAddresModal({
           postalCode,
         },
         {
-          onSuccess: () => toast.success("success update your address"),
-          onError: (err) => console.log(err),
+          onSuccess: () => {
+            onClose();
+            toast.success("success update your address");
+          },
+          onError: (err) => {
+            console.log(err);
+
+            toast.error("something went wrong");
+          },
         }
       );
     }
+    setLoading(false);
   };
 
   return (

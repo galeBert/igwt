@@ -16,7 +16,15 @@ export interface UserData extends AddressData {
   balance: number;
   userId: string;
 }
-
+export type CashTransactionData = {
+  amount: number;
+  from: string;
+  id: string;
+  status: string;
+  to: string;
+  transactionId: string;
+  type: string;
+};
 export type TTransactionData = {
   id?: string;
   role?: "sender" | "reciever";

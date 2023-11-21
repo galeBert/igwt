@@ -30,6 +30,8 @@ export default function MainCard({ user, userId }: MainCardProps) {
   const { onOpen: addAddressData } = useAddUserAddresModal();
 
   const handleCreateTransaction = () => {
+    console.log("aa");
+
     if (user.address_id) {
       return onOpen();
     }
@@ -46,7 +48,7 @@ export default function MainCard({ user, userId }: MainCardProps) {
         p-0
         rounded-lg`}
       >
-        <div className="bg-white absolute w-full h-full left-0 rounded-md opacity-5" />
+        <div className="bg-white pointer-events-none absolute w-full h-full left-0 rounded-md opacity-5" />
         <CardHeader className="w-full">
           <CardTitle className="text-xl">Balance</CardTitle>
           <CardTitle>{formatter.format(balance)}</CardTitle>

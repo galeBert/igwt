@@ -45,7 +45,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
   const shippingInfo = datas?.shipping_status ? (
     <Alert
       className={clsx(
-        "backdrop-blur-xl bg-white bg-opacity-20  dark:bg-opacity-5   border-none transition-all relative   duration-500 !-translate-y-100",
+        "backdrop-blur-xl w-fit bg-white bg-opacity-20  dark:bg-opacity-5   border-none transition-all relative   duration-500 !-translate-y-100",
         {
           "shadow-blue-400  ring-4 border-solid  ring-blue-400  translate-y-0  shadow-lg":
             start,
@@ -191,7 +191,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
   return (
     <Card
       className={`
-       relative bg-cover w-full min-h-full p-5 px-0
+       relative bg-cover w-full p-5 px-0
       dark:bg-[url('https://firebasestorage.googleapis.com/v0/b/igwt-3b1a7.appspot.com/o/dark-mode-mono-rezise.png?alt=media&token=299e2672-99a0-498d-b1c3-d1a235b4c5ab&_gl=1*c8fozh*_ga*NTY0Mjc2NzI5LjE2OTU1NjQzNDg.*_ga_CW55HF8NVT*MTY5OTYwNDkyMS42MS4xLjE2OTk2MDU4NzguNTIuMC4w')] 
       bg-[url('https://firebasestorage.googleapis.com/v0/b/igwt-3b1a7.appspot.com/o/light-mode-mono-resize.png?alt=media&token=43cbdf53-10d9-47c4-b987-f67f997aec11&_gl=1*fqouxe*_ga*NTY0Mjc2NzI5LjE2OTU1NjQzNDg.*_ga_CW55HF8NVT*MTY5OTYwNDkyMS42MS4xLjE2OTk2MDYxODkuNDguMC4w')] 
       `}

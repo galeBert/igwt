@@ -86,9 +86,11 @@ export default function CreateProductDetail({
     setLoading(false);
     setOpen(false);
   };
+  console.log(data);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {!isSender || !data?.package_detail?.weight ? (
+      {isSender && !data?.package_detail?.weight ? (
         <DialogTrigger asChild>
           <Button>Add product detail</Button>
         </DialogTrigger>
