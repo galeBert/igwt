@@ -17,21 +17,20 @@ import {
 } from "@react-email/components";
 
 interface VercelInviteUserEmailProps {
-  senderName?: string;
-  senderEmail?: string;
-  senderPhoto?: string;
-  recieverName?: string;
-  productName?: string;
-  inviteLink?: string;
+  senderName: string;
+  senderEmail: string;
+  recieverName: string;
+  productName: string;
+  inviteLink: string;
 }
 
-export const EmailTemplate: React.FC<Readonly<VercelInviteUserEmailProps>> = ({
+export const EmailTemplate = ({
   senderName = "albert",
   senderEmail = "igwt@example.com",
   recieverName = "someone",
   productName = "something",
   inviteLink = "https://vercel.com/teams/invite/foo",
-}) => {
+}: VercelInviteUserEmailProps) => {
   const previewText = `Join ${senderEmail} on IGWT`;
 
   return (

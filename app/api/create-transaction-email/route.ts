@@ -15,24 +15,31 @@ export async function POST(req: Request, res: NextApiResponse) {
       recieverEmail,
       senderEmail,
       senderName,
-      senderPhoto,
     } = body;
+    if (
+      inviteLink &&
+      productName &&
+      recieverEmail &&
+      recieverName &&
+      senderName &&
+      senderEmail
+    ) {
+      const data = await resend.emails.send({
+        from: "albert@igwt.space",
+        to: [recieverEmail],
+        subject: `Join ${senderEmail} on IGWT`,
+        react: EmailTemplate({
+          inviteLink,
+          productName,
+          recieverName,
+          senderEmail,
+          senderName,
+        }),
+      });
 
-    const data = await resend.emails.send({
-      from: "albert@igwt.space",
-      to: [recieverEmail],
-      subject: `Join ${senderEmail} on IGWT`,
-      react: EmailTemplate({
-        inviteLink,
-        productName,
-        recieverName,
-        senderEmail,
-        senderName,
-        senderPhoto,
-      }),
-    });
-
-    return NextResponse.json(data);
+      return NextResponse.json(data);
+    }
+    return NextResponse.json(null);
   } catch (error) {
     console.log(error);
 
