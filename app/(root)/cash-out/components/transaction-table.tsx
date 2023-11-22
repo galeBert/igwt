@@ -14,20 +14,15 @@ interface TransactionTableProps {
 export default function CashTransactionTable({
   userId,
 }: TransactionTableProps) {
-  const { user, isLoaded } = useUser();
-  const email = user?.emailAddresses?.[0].emailAddress;
-  const { data, error, isLoading, isValidating } = useSWR(`/asu`, () =>
+  const { user } = useUser();
+  const { data, isLoading } = useSWR(`/asu`, () =>
     getCashTransactions(user?.id ?? "")
   );
 
   return (
     <div className="space-y-2">
       <Label className="text-lg">Income & Outcome</Label>
-      <DataTable
-        loading={isLoaded || isLoading}
-        columns={columns}
-        data={data ?? []}
-      />
+      <DataTable loading={isLoading} columns={columns} data={data ?? []} />
     </div>
   );
 }

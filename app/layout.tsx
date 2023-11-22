@@ -1,11 +1,12 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
 import { ThemeProvider } from "@/providers/theme-provider";
 import AddContactModal from "@/providers/add-contact-provider";
 import ToastProvider from "@/providers/toast-provider";
 import { useCreateTransactionModal } from "@/hooks/use-create-transaction";
+import LandingPage from "./(root)/components/landing-page";
 
 const inter = Montserrat({ subsets: ["latin"] });
 

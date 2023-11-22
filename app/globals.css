@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  height: 100%;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -66,6 +71,10 @@
   }
 }
 
+.cl-card,
+.cl-signIn-start {
+  @apply !bg-opacity-25;
+}
 @layer base {
   * {
     @apply border-border;

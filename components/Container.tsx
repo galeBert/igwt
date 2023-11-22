@@ -9,19 +9,19 @@ interface ContainerProps {
 
 export default function Container({ children }: ContainerProps) {
   const [mounted, setMounted] = useState(false);
-  const { isSignedIn, isLoaded } = useUser();
+  // const { isSignedIn, isLoaded } = useUser();
   useEffect(() => {
     setMounted(true);
   }, []);
   if (!mounted) {
     return null;
   }
-  const pathname = window.location.pathname.split("/");
-  const isSingleTransactionPage =
-    pathname?.[1] === "transactions" && pathname.length > 2;
+  // const pathname = window.location.pathname.split("/");
+  // const isSingleTransactionPage =
+  //   pathname?.[1] === "transactions" && pathname.length > 2;
 
-  if (!isSignedIn && isLoaded && !isSingleTransactionPage) {
-    return redirect("/sign-in");
-  }
+  // if (!isSignedIn && isLoaded && !isSingleTransactionPage) {
+  //   return redirect("/sign-in");
+  // }
   return <main className="container dark:bg-gray-950">{children}</main>;
 }

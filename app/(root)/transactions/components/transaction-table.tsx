@@ -31,11 +31,7 @@ export default function TransactionTable({ userId }: TransactionTableProps) {
   return (
     <div className="space-y-2">
       <Label className="text-lg">Transaction</Label>
-      <DataTable
-        loading={isLoaded || isLoading}
-        columns={columns}
-        data={newData ?? []}
-      />
+      <DataTable loading={isLoading} columns={columns} data={newData ?? []} />
     </div>
   );
 }

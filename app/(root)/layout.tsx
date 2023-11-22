@@ -2,7 +2,7 @@ import { getUserData } from "@/actions/get-user-data";
 import StoreInitializer from "@/components/store-initializer";
 import { Separator } from "@/components/ui/separator";
 import { useUserData } from "@/hooks/useUserData";
-import { auth, currentUser } from "@clerk/nextjs";
+import { auth, currentUser, SignedIn, SignedOut } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
 import Container from "../../components/Container";
@@ -18,6 +18,7 @@ export default async function layout({ children }: { children: ReactNode }) {
   useUserData.setState({
     balance: fUserData.balance,
     userId: fUserData.userId,
+    translatedUserData,
   });
 
   return (
