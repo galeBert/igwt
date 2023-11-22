@@ -12,9 +12,18 @@ import { cn } from "@/lib/utils";
 export default function LandingPage() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="w-full h-screen overflow-hidden flex -top-4 left-0 m-0 absolute bg-black">
-      <div className="absolute w-full p-4">
-        <div className="flex items-center space-x-2 w-9">
+    <div className="w-full h-screen overflow-hidden flex -top-4 left-0 m-0 absolute bg-[#030304]">
+      <div
+        onClick={() => setOpen(false)}
+        className={cn(
+          "w-full  absolute h-full z-[11] backdrop-blur-sm bg-white    bg-opacity-10",
+          {
+            "bg-transparent pointer-events-none backdrop-blur-none ": !open,
+          }
+        )}
+      />
+      <div className="absolute z-[11] w-full p-4">
+        <div className="flex  items-center space-x-2 w-9">
           <Image
             width={36}
             height={36}
@@ -37,12 +46,13 @@ export default function LandingPage() {
           opacity-0  
           transition-all 
           -translate-y-1/2 
-          z-10 
+          z-[12] 
           translate-x-1/2 
           lg:right-1/4 
-          md:right-1/2
+          right-1/2 pointer-events-none
+          
           `,
-          { "opacity-100": open }
+          { "opacity-100 pointer-events-auto": open }
         )}
       >
         <div
@@ -63,22 +73,23 @@ export default function LandingPage() {
           <SignIn
             appearance={{
               variables: {
-                colorBackground: "rgba(0,0,0, 0.4)",
+                colorBackground: "rgba(0,0,0, 0.7)",
                 colorPrimary: "black",
                 colorText: "white",
                 colorTextSecondary: "white",
+                colorAlphaShade: "white",
               },
             }}
           />
         </div>
       </div>
-      <div className=" text-white flex-1 flex items-center">
-        <div className="bg-black text-5xl mx-auto p-20 space-y-10">
+      <div className="absolute lg:relative z-10  h-full text-white flex-1 flex items-center backdrop-blur-sm md:backdrop-blur-none">
+        <div className="text-5xl mx-auto md:p-20 p-5  space-y-10">
           <p className="font-medium">
             Transparent
             <br /> and secure transaction
           </p>
-          <p className="font-normal text-xl text-slate-300">
+          <p className="font-normal text-xl md:max-w-sm text-slate-300">
             IGWT help you to safely make a transaction with everyone, you can
             live tract ongoing transaction
           </p>
@@ -95,9 +106,10 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <div className="flex-1 ">
+      <div className="flex-1 flex h-full  absolute md:relative ">
+        <div className="block sm:hidden w-0 md:w-1/4 lg:hidden" />
         <Spline
-          className=" -scale-x-100"
+          className=" -scale-x-100 translate-x-1/3 lg:translate-x-0"
           scene="https://prod.spline.design/n07cjQnMTMyUsmIk/scene.splinecode"
         />
       </div>
