@@ -76,17 +76,19 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
     setLoading(true);
     if (data) {
       await axios
-        .patch(`/api/transaction/${transactionId}`, {
-          transactionId,
+        .patch(`/api/transaction/${transactionId}/select-shipper`, {
           selectedShipper: { ...selected },
           status: "001",
         })
         .then(async () => {
-          await axios.post(`/api/transaction/${data?.id}/transaction-log`, {
-            role: data?.role,
-            description: `already selected shipping to ${selected.company} `,
-            status: "complete",
-          });
+          await axios.post(
+            `/api/transaction/${transactionId}/transaction-log`,
+            {
+              role: data?.role,
+              description: `already selected shipping to ${selected.company} `,
+              status: "complete",
+            }
+          );
         })
         .catch(async () => {
           await axios.post(`/api/transaction/${data?.id}/transaction-log`, {
