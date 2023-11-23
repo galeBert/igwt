@@ -76,7 +76,7 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
     setLoading(true);
     if (data) {
       await axios
-        .patch(`/api/transaction/${data?.id}`, {
+        .patch(`/api/transaction/${transactionId}`, {
           transactionId,
           selectedShipper: { ...selected },
           status: "001",
