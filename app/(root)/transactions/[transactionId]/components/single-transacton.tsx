@@ -32,6 +32,7 @@ export default function SingleTransaction({
   const { data, isLoading } = useSWR("single-transaction", () =>
     getTransaction(transactionId)
   );
+  console.log(userId);
 
   const isPackageArrived = data?.transaction_status?.status === "DONE";
   const transactionLimit = moment(data?.transaction_status?.expired_at).diff(

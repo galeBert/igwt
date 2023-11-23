@@ -37,6 +37,7 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
     getTransaction(transactionId)
   );
   const [loading, setLoading] = useState(false);
+  console.log("single-transaction", data);
 
   const [open, setOpen] = useState(false);
   const { user } = useUser();
@@ -178,7 +179,9 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
           <div className="flex flex-col space-y-2">
             <Label>Address</Label>
             <div className="flex items-center">
-              <Label className="text-sm">Jl. artileri no.10</Label>
+              <Label className="text-sm">
+                {data?.reciever?.formatted_address}
+              </Label>
               <Button className="space-x-2 flex" variant="link" size="sm">
                 <PencilIcon width={16} className="pr-1" /> edit
               </Button>

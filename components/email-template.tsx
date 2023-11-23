@@ -105,7 +105,7 @@ export const EmailTemplate = ({
             <Text className="text-black text-[14px] leading-[24px]">
               or copy and paste this URL into your browser:{" "}
               <Link
-                href={`https://www.igwt.space/${inviteLink}`}
+                href={`https://www.igwt.space/transactions/${inviteLink}`}
                 className="text-blue-600 no-underline"
               >
                 https://www.igwt.space/transactions/{inviteLink}

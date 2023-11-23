@@ -3,7 +3,9 @@ import Sidebar from "@/app/(root)/components/sidebar";
 import { UserButton } from "@clerk/nextjs";
 import { User } from "@clerk/nextjs/dist/types/server";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { Bell } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { ThemeButton } from "./theme-button";
 import { Button } from "./ui/button";
@@ -26,7 +28,9 @@ export default function Navbar({ userData }: NavbarProps) {
           }
           className="md:w-9 w-5"
         />
-        <h1 className=" text-xl md:text-4xl font-bold">IGWT</h1>
+        <Link href="/" className=" text-xl md:text-4xl font-bold">
+          IGWT
+        </Link>
       </div>
       <Sheet>
         <SheetTrigger asChild className="block lg:hidden">
@@ -39,7 +43,7 @@ export default function Navbar({ userData }: NavbarProps) {
             <div className=" space-x-4 w-full items-center justify-between px-3 flex">
               <ThemeButton />
               <div className="py-2 px-4 items-center rounded-md hover:bg-slate-100 dark:hover:bg-gray-800 flex space-x-4">
-                <div className="flex flex-col items-end">
+                <div className="flex flex-col items-start">
                   <span>Welcome Back</span>
                   <span>{userData?.firstName}</span>
                 </div>
@@ -59,6 +63,8 @@ export default function Navbar({ userData }: NavbarProps) {
           </div>
           <UserButton afterSignOutUrl="/" />
         </div>
+
+        <Bell />
       </div>
     </div>
   );

@@ -23,5 +23,9 @@ export default function Container({ children }: ContainerProps) {
   // if (!isSignedIn && isLoaded && !isSingleTransactionPage) {
   //   return redirect("/sign-in");
   // }
-  return <main className="container dark:bg-gray-950">{children}</main>;
+  return (
+    <main className="container lg:!max-w-[1024px] xl:!max-w-[1280px] 2xl:!max-w-[1536px]  md:!max-w-2xl md:!px-6 dark:bg-gray-950">
+      {children}
+    </main>
+  );
 }

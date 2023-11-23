@@ -27,7 +27,7 @@ export default function AvatarDetails({ badge, userData }: AvatarDetailProps) {
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <div className="flex items-center space-x-1">
-        <h1 className="h-full">{userData.name}</h1>
+        <h1 className="h-full truncate">{userData.name}</h1>
         {userData.email === user?.emailAddresses?.[0].emailAddress ? (
           <h1>{" (You)"}</h1>
         ) : (

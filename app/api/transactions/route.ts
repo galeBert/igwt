@@ -8,11 +8,11 @@ export async function PATCH(
   { params }: { params: { transactionId: string } }
 ) {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    // if (!userId) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
     const body = await req.json();
 
     const { transactionId, ...rest } = body;
