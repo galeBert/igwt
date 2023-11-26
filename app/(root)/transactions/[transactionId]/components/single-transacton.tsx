@@ -32,7 +32,6 @@ export default function SingleTransaction({
   const { data, isLoading } = useSWR("single-transaction", () =>
     getTransaction(transactionId)
   );
-  console.log(userId);
 
   const isPackageArrived = data?.transaction_status?.status === "DONE";
   const transactionLimit = moment(data?.transaction_status?.expired_at).diff(
@@ -111,7 +110,7 @@ export default function SingleTransaction({
         </Badge>
       </div>
       <div className="flex flex-col h-fit w-full space-y-4">
-        <div className="grid grid-cols-2 h-fit space-x-4">
+        <div className="grid md:grid-cols-2 h-fit space-y-4 md:space-x-4">
           <StatusPage transactionId={transactionId} />
           <InfoPage transactionId={transactionId} />
         </div>

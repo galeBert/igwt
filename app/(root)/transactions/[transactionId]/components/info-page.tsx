@@ -45,7 +45,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
   const shippingInfo = datas?.shipping_status ? (
     <Alert
       className={clsx(
-        "backdrop-blur-xl w-fit bg-white bg-opacity-20  dark:bg-opacity-5   border-none transition-all relative   duration-500 !-translate-y-100",
+        "backdrop-blur-xl -pb-4 w-full bg-white bg-opacity-20  dark:bg-opacity-5   border-none transition-all relative   duration-500 !-translate-y-100",
         {
           "shadow-blue-400  ring-4 border-solid  ring-blue-400  translate-y-0  shadow-lg":
             start,
@@ -70,7 +70,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
         </Button>
       </div>
 
-      <AlertDescription>
+      <AlertDescription className="text-left">
         {datas?.selectedShipper?.company.toUpperCase()}
       </AlertDescription>
       <AlertDescription className="mt-4 flex items-center space-x-2 justify-between">
@@ -147,7 +147,7 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
         </Button>
       </div>
 
-      <AlertDescription>
+      <AlertDescription className="text-left">
         {datas?.payment?.bill_payment.sender_bank.toUpperCase()}
       </AlertDescription>
       <AlertDescription className="mt-4 flex items-center space-x-2 justify-between">
@@ -202,7 +202,9 @@ export default function InfoPage({ transactionId }: { transactionId: string }) {
         })}
       />
       <CardContent className="h-full space-y-2  ">
-        <div className=" h-full z-10 relative space-y-2">{infoContent}</div>
+        <div className=" h-full z-10 relative space-y-2 flex flex-col">
+          {infoContent}
+        </div>
       </CardContent>
     </Card>
   );

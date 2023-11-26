@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 export default function LandingPage() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="w-full h-screen overflow-hidden flex -top-4 left-0 m-0 absolute bg-[#030304]">
+    <div className="w-full h-screen overflow-hidden flex -top-4 left-0 m-0 absolute bg-[#030304] z-50">
       <div
         onClick={() => setOpen(false)}
         className={cn(

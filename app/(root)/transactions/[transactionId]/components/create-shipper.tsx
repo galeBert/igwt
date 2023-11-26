@@ -20,6 +20,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { TTransactionData } from "@/hooks/use-create-transaction";
 import { axios } from "@/lib/axios";
+import { removeDuplicateObjectFromArray } from "@/lib/helpers";
 import { ShippingPriceListData } from "@/lib/types";
 import { useUser } from "@clerk/nextjs";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
@@ -37,7 +38,6 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
     getTransaction(transactionId)
   );
   const [loading, setLoading] = useState(false);
-  console.log("single-transaction", data);
 
   const [open, setOpen] = useState(false);
   const { user } = useUser();
@@ -63,12 +63,14 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
         ],
       });
 
-      await axios.patch(`/api/transactions`, {
-        transactionId,
-        shipping: { ...shipdata?.data },
-      });
+      await axios
+        .patch(`/api/transaction/${transactionId}/select-shipper`, {
+          shipping: { ...shipdata?.data },
+        })
+        .then(() => {
+          mutate();
+        });
     }
-    mutate();
     setLoading(false);
   };
 
@@ -80,17 +82,17 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
           selectedShipper: { ...selected },
           status: "001",
         })
-        .then(async () => {
+        .then(async (datar) => {
           await axios.post(
             `/api/transaction/${transactionId}/transaction-log`,
             {
-              role: data?.role,
+              role: !isSender ? "reciever" : "sender",
               description: `already selected shipping to ${selected.company} `,
               status: "complete",
             }
           );
         })
-        .catch(async () => {
+        .catch(async (err) => {
           await axios.post(`/api/transaction/${data?.id}/transaction-log`, {
             role: data?.role,
             description: `already selected shipping to ${selected.company} `,
@@ -123,6 +125,25 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
     }
     setLoading(false);
   };
+
+  const check = new Set();
+  const shipperList =
+    data?.shipping?.pricing.map((obj, idx, arr) => {
+      if (!check.has(obj["courier_name"])) {
+        check.add(obj["courier_name"]);
+      } else {
+        return {
+          name: obj.courier_name,
+          shipping: [obj, arr[idx - 1]],
+        };
+      }
+      return { name: obj.courier_name, shipping: [obj] };
+    }) ?? [];
+
+  const shipperListFilltered = removeDuplicateObjectFromArray(
+    shipperList.reverse(),
+    "name"
+  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -158,7 +179,10 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
       ) : null}
       {!isSender ? (
         <DialogTrigger onClick={handleUpdateTransaction} asChild>
-          <Button className="space-x-1">
+          <Button
+            variant={data?.selectedShipper ? "outline" : "default"}
+            className="space-x-1"
+          >
             {data?.selectedShipper ? (
               <>
                 <CheckCircledIcon className="bg-green-600 rounded-full text-white w-5 h-5 " />
@@ -193,39 +217,40 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
           <Card>
             <CardContent>
               <Accordion type="single" collapsible className="w-full">
-                {data?.shipping?.pricing.map((shipper, key) => {
+                {shipperListFilltered.reverse().map((shipper, key) => {
                   return (
-                    <AccordionItem key={key} value={shipper.courier_name}>
-                      <AccordionTrigger>
-                        {shipper.courier_name}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="w-full">
-                          <div className="flex w-full justify-between items-center">
-                            <div className="flex flex-col">
-                              <h1>{shipper.service_type}</h1>
-                              <h1>{shipper.duration}</h1>
-                            </div>
-                            <h3>{shipper.price}</h3>
-                          </div>
-                          <div className="flex justify-end">
-                            <Button
-                              className="w-full"
-                              disabled={loading || isLoading}
-                              onClick={() => handleChooseShipping(shipper)}
-                            >
-                              {loading ? (
-                                <div className="flex justify-center items-center w-full space-x-2">
-                                  <Loader2 className="w-5 animate-spin" />
-                                  <span>loading...</span>
+                    <AccordionItem key={key} value={shipper.name}>
+                      <AccordionTrigger>{shipper.name}</AccordionTrigger>
+                      {shipper.shipping.map((list, key) => {
+                        return (
+                          <AccordionContent key={key}>
+                            <div className="w-full">
+                              <div className="flex w-full justify-between items-center">
+                                <div className="flex flex-col">
+                                  <h1>{list.service_type}</h1>
+                                  <h1>{list.duration}</h1>
                                 </div>
-                              ) : (
-                                "Select"
-                              )}
-                            </Button>
-                          </div>
-                        </div>
-                      </AccordionContent>
+                                <h3>{list.price}</h3>
+                              </div>
+                              <div className="flex justify-end">
+                                <Button
+                                  disabled={loading || isLoading}
+                                  onClick={() => handleChooseShipping(list)}
+                                >
+                                  {loading ? (
+                                    <div className="flex justify-center items-center w-full space-x-2">
+                                      <Loader2 className="w-5 animate-spin" />
+                                      <span>loading...</span>
+                                    </div>
+                                  ) : (
+                                    "Select"
+                                  )}
+                                </Button>
+                              </div>
+                            </div>
+                          </AccordionContent>
+                        );
+                      })}
                     </AccordionItem>
                   );
                 })}

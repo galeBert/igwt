@@ -32,12 +32,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   loading?: boolean;
+  textColor?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   loading,
+  textColor,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -53,9 +55,8 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   });
-
   return (
-    <div className="space-y-2">
+    <div className={textColor ? "space-y-2" : `space-y-2 ${textColor}`}>
       <div className="w-full flex justify-end">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -104,7 +105,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className={textColor}>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

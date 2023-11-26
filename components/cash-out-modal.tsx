@@ -60,7 +60,6 @@ export function CashOutMoneyModal({ userId }: { userId: string }) {
   const { balance, setBalance } = useUserData();
   const { data, mutate } = useSWR(userId, getUserData);
   const { trigger, isMutating } = useSWRMutation(userId, createCashout);
-  console.log(useUserData.getState());
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

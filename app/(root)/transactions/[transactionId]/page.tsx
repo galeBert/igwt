@@ -4,6 +4,7 @@ import { CardTitle } from "@/components/ui/card";
 import React from "react";
 import TransactionPage from "./components/transaction-page";
 import SingleTransaction from "./components/single-transacton";
+import SingleTransactionMobile from "./components/single-transacton-mobile";
 
 export const revalidate = 0;
 
@@ -14,7 +15,12 @@ export default async function page({
 }) {
   return (
     <div className="space-y-3">
-      <SingleTransaction transactionId={params.transactionId} />
+      <div className="block: md:hidden">
+        <SingleTransactionMobile transactionId={params.transactionId} />
+      </div>
+      <div className="hidden md:block">
+        <SingleTransaction transactionId={params.transactionId} />
+      </div>
 
       <TransactionPage />
     </div>

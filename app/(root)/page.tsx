@@ -1,14 +1,13 @@
 import { getUserData } from "@/actions/get-user-data";
-import StoreInitializer from "@/components/store-initializer";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { useUserData } from "@/hooks/useUserData";
 import { auth, SignedIn, SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
 import CashTransactionTable from "./cash-out/components/transaction-table";
 import CreateTransactionModal from "./components/create-transaction-modal";
 import LandingPage from "./components/landing-page";
 import MainCard from "./components/main-card";
+import TransactionTable from "./transactions/components/transaction-table";
 
 export default async function Home() {
   const { userId } = auth();
@@ -47,7 +46,10 @@ export default async function Home() {
               <MainCard user={fUserData} userId={userId ?? ""} />
             </Card>
           </div>
-          <CashTransactionTable userId={userId} />
+          <div className=" block space-x-3 md:flex">
+            <TransactionTable userId={userId} />
+            <CashTransactionTable userId={userId} />
+          </div>
         </div>
         <CreateTransactionModal fUserData={fUserData} />
       </SignedIn>

@@ -15,10 +15,9 @@ export default function CashTransactionTable({
   userId,
 }: TransactionTableProps) {
   const { user } = useUser();
-  const { data, isLoading } = useSWR(`/asu`, () =>
+  const { data, isLoading } = useSWR(`income`, () =>
     getCashTransactions(user?.id ?? "")
   );
-
   return (
     <div className="space-y-2">
       <Label className="text-lg">Income & Outcome</Label>

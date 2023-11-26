@@ -15,7 +15,6 @@ export async function GET(
 ) {
   try {
     const q = query(collection(db, `user/${params.userId}/balance`));
-    console.log(params);
 
     const querySnapshot = await getDocs(q);
 
@@ -23,7 +22,7 @@ export async function GET(
     querySnapshot.forEach((doc) => {
       transactions.push({ ...doc.data(), id: doc.id });
     });
-    console.log(transactions);
+    console.log("transactions", transactions);
 
     return NextResponse.json(transactions);
   } catch (error: any) {

@@ -26,7 +26,7 @@ import { Separator } from "@/components/ui/separator";
 import { bankList } from "@/lib/bank-list";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
+import { CircleDollarSign, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import useSWR from "swr";
 
@@ -58,25 +58,31 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
       });
 
       await axios.post(`/api/transaction/${transactionId}/transaction-log`, {
-        role: data?.role,
+        role: !isSender ? "reciever" : "sender",
         description: `selected payment to bca `,
         status: "waiting payment to complete",
       });
-      await axios.patch(`/api/transaction/${transactionId}`, {
+      await axios.patch(`/api/transaction/${transactionId}/select-payment`, {
         transactionId,
         status: "012",
       });
       setOpen(false);
       mutate();
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {data?.selectedShipper && isSender ? (
+      {data?.selectedShipper ? (
         <DialogTrigger asChild>
-          <Button variant="secondary">Set Payment</Button>
+          <Button
+            className="space-x-2"
+            variant={data.selectedShipper ? "default" : "secondary"}
+          >
+            <CircleDollarSign width={24} />
+            <span>Set Payment</span>
+          </Button>
         </DialogTrigger>
       ) : null}
       <DialogContent>
@@ -91,7 +97,7 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
             <div className="flex flex-col space-y-2 py-2">
               <Label className="text-lg">Bank</Label>
               <Select onValueChange={(e) => setBank(e)}>
-                <SelectTrigger disabled={!user} className="w-[180px]">
+                <SelectTrigger className="w-[180px]">
                   <SelectValue
                     placeholder={isSender ? "not set" : "select bank..."}
                   />

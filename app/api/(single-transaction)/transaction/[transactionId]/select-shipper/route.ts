@@ -1,7 +1,6 @@
 import { db } from "@/lib/firebase";
-import { auth } from "@clerk/nextjs";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import Error from "next/error";
+
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -38,6 +37,8 @@ export async function PATCH(
     await updateDoc(transactionRef, rest);
     return NextResponse.json(rest);
   } catch (error: any) {
+    console.log(console.log(error));
+
     return NextResponse.json({ error }, { status: 500 });
   }
 }

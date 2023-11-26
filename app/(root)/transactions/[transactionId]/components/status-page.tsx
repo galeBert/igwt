@@ -1,13 +1,7 @@
 "use client";
 import { getTransaction } from "@/actions/get-transaction";
 import AvatarDetails from "@/app/(root)/components/avatar-details";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ArrowRightIcon } from "lucide-react";

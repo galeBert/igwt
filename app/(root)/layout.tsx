@@ -27,12 +27,12 @@ export default async function layout({ children }: { children: ReactNode }) {
 
       <Navbar userData={translatedUserData} />
 
-      <div className=" space-x-2 flex">
+      <div className="  space-x-2 flex">
         <div className="w-1/4 hidden lg:block space-y-4">
           <Separator className=" rounded-md" />
           <Sidebar />
         </div>
-        <div className="w-full space-y-4">
+        <div className="w-full pt-14 md:pt-0 space-y-4">
           <Separator className=" rounded-md" />
           {children}
         </div>
