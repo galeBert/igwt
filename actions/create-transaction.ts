@@ -13,7 +13,7 @@ export const createTransaction = async ({ data, userId }: PaymentData) => {
   try {
     const transactionData = await axios.post(
       `${url}/api/${userId}/transaction`,
-      data
+      { ...data, notReadBy: [data.sender?.email, data.reciever?.email] }
     );
     if (transactionData.data) {
       const data: TTransactionData = transactionData.data;

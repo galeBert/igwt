@@ -46,7 +46,7 @@ export default async function Home() {
               <MainCard user={fUserData} userId={userId ?? ""} />
             </Card>
           </div>
-          <div className=" block space-x-3 md:flex">
+          <div className=" block space-x-3 md:flex md:flex-col lg:flex-row">
             <TransactionTable userId={userId} />
             <CashTransactionTable userId={userId} />
           </div>

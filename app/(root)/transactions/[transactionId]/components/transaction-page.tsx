@@ -35,8 +35,6 @@ export default function TransactionPage() {
     getTransaction(transactionId)
   );
 
-  console.log(transactionId);
-
   useEffect(() => {
     const q = query(
       collection(db, `transactions/${transactionId}/transaction-log`),

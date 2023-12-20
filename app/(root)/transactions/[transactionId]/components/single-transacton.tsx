@@ -11,11 +11,13 @@ import {
 } from "@/components/ui/tooltip";
 import { useUserData } from "@/hooks/useUserData";
 import { axios } from "@/lib/axios";
+import { useUser } from "@clerk/nextjs";
 import clsx from "clsx";
 import moment from "moment";
-import React from "react";
+import React, { useEffect } from "react";
 import Countdown from "react-countdown";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import CreatePayment from "./create-payment";
 import CreateProductDetail from "./create-product-detail";
 import CreateShipper from "./create-shipper";
@@ -25,13 +27,43 @@ import StatusPage from "./status-page";
 interface SingleTransactionProps {
   transactionId: string;
 }
+const fetcher = (url: string, { arg }: { arg?: { notReadBy: string[] } }) => {
+  if (!arg?.notReadBy) return;
+
+  fetch(url, { method: "PATCH", body: JSON.stringify(arg) }).then((res) =>
+    res.json()
+  );
+};
 export default function SingleTransaction({
   transactionId,
 }: SingleTransactionProps) {
+  const { user } = useUser();
   const { userId } = useUserData();
   const { data, isLoading } = useSWR("single-transaction", () =>
     getTransaction(transactionId)
   );
+  const { trigger } = useSWRMutation(
+    `/api/transaction/${transactionId}`,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (user?.emailAddresses[0].emailAddress) {
+      const notReadByMe = data?.notReadBy?.includes(
+        user?.emailAddresses[0].emailAddress
+      );
+      if (notReadByMe) {
+
+        const newData =
+          data?.notReadBy?.filter(
+            (read) => read !== user.emailAddresses[0].emailAddress
+          ) ?? [];
+        trigger({
+          notReadBy: newData,
+        });
+      }
+    }
+  }, [data?.notReadBy, trigger, user?.emailAddresses]);
 
   const isPackageArrived = data?.transaction_status?.status === "DONE";
   const transactionLimit = moment(data?.transaction_status?.expired_at).diff(

@@ -8,18 +8,17 @@ export async function POST(
   { params }: { params: { transactionId: string } }
 ) {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    // if (!userId) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
     const body = await req.json();
 
     const data = {
       ...body,
-      userId,
+      // userId,
       createdAt: Date.now(),
-      readBy: [],
       status: "000",
     };
     const newDoc = await addDoc(collection(db, `transactions`), data);

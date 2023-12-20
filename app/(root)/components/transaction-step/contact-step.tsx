@@ -100,7 +100,7 @@ export default function ContactStep({
                         </div>
                       </div>
                     ) : (
-                      <div className="max-h-[250px] space-y-3  overflow-scroll">
+                      <div className="max-h-[250px] space-y-3 p-1  overflow-scroll">
                         {contacts.map((contact, idx) => {
                           return (
                             <RadioGroup.Option key={idx} value={contact.name}>

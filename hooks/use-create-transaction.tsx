@@ -26,6 +26,7 @@ export type CashTransactionData = {
   type: string;
 };
 export type TTransactionData = {
+  notReadBy?: string[];
   id?: string;
   role?: "sender" | "reciever";
   link?: string;

@@ -1,24 +1,89 @@
 "use client";
 import Sidebar from "@/app/(root)/components/sidebar";
-import { UserButton } from "@clerk/nextjs";
+import { db } from "@/lib/firebase";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 import { User } from "@clerk/nextjs/dist/types/server";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import {
+  and,
+  collection,
+  onSnapshot,
+  or,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { Bell } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ThemeButton } from "./theme-button";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from "./ui/menubar";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 interface NavbarProps {
   userData?: User | null;
 }
 export default function Navbar({ userData }: NavbarProps) {
+  const [notification, setNotification] = useState<any[]>([]);
+  useEffect(() => {
+    if (userData?.emailAddresses[0].emailAddress) {
+      const q = query(
+        collection(db, `transactions`),
+        and(
+          where(
+            "notReadBy",
+            "array-contains",
+            userData.emailAddresses[0].emailAddress
+          ),
+          or(
+            where(
+              "sender.email",
+              "==",
+              userData.emailAddresses[0].emailAddress
+            ),
+            where(
+              "reciever.email",
+              "==",
+              userData.emailAddresses[0].emailAddress
+            )
+          )
+        ),
+
+        orderBy("createdAt", "asc")
+      );
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = {
+            ...doc.data(),
+            id: doc.id,
+          } as unknown;
+
+          setNotification((prev) => {
+            return [data];
+          });
+        });
+      });
+
+      return unsubscribe;
+    }
+  }, [userData?.emailAddresses]);
+
+  console.log(notification);
+
   return (
-    <div className="fixed md:relative px-4 w-full md:h-[72px] left-0 h-[56px]">
-      <div className="flex z-20 w-full left-0 backdrop-blur-xl dark:bg-black bg-white bg-opacity-50 sticky top-0 justify-between items-center  py-2 md:py-2 md:px-4">
+    <div className="fixed md:relative z-50 px-4 md:px-0 w-full md:h-[72px] left-0 h-[56px]">
+      <div className="flex z-20 w-full left-0 backdrop-blur-xl dark:bg-black bg-white bg-opacity-50 sticky top-0 justify-between items-center  py-2 md:py-2 ">
         <div className="flex items-center space-x-2 w-9">
           <Image
             width={36}
@@ -64,8 +129,25 @@ export default function Navbar({ userData }: NavbarProps) {
             </div>
             <UserButton afterSignOutUrl="/" />
           </div>
-
-          <Bell />
+          <SignedIn>
+            <Menubar>
+              <MenubarMenu>
+                <MenubarTrigger>
+                  <Bell />
+                </MenubarTrigger>
+                <MenubarContent align="end">
+                  <MenubarItem>
+                    New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+                  </MenubarItem>
+                  <MenubarItem>New Window</MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>Share</MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>Print</MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+            </Menubar>
+          </SignedIn>
         </div>
       </div>
     </div>
