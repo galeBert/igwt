@@ -106,24 +106,37 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
   };
 
   const handleRequestPickup = async () => {
-    setLoading(true);
-    if (
-      data?.sender &&
-      data?.reciever &&
-      data.selectedShipper &&
-      data?.package_detail
-    ) {
-      const { sender, reciever, package_detail, selectedShipper } = data;
-      await createOrder({
-        packageItems: [package_detail],
-        reciever,
-        selectedShipper,
-        sender,
-        transactionId,
-      });
-      mutate();
+    try {
+      setLoading(true);
+      if (
+        data?.sender &&
+        data?.reciever &&
+        data.selectedShipper &&
+        data?.package_detail
+      ) {
+        const { sender, reciever, package_detail, selectedShipper } = data;
+
+        console.log({
+          packageItems: [package_detail],
+          reciever,
+          selectedShipper,
+          sender,
+          transactionId,
+        });
+        await createOrder({
+          packageItems: [package_detail],
+          reciever,
+          selectedShipper,
+          sender,
+          transactionId,
+        });
+        mutate();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const check = new Set();

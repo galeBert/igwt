@@ -16,6 +16,7 @@ export async function POST(req: Request, res: Response) {
     if (!data.courier_tracking_id) {
       throw new Error("order not found");
     }
+    console.log({ data });
 
     const orderTrack = await axios.get(
       `https://api.biteship.com/v1/trackings/${data.courier_tracking_id}`,
@@ -45,6 +46,35 @@ export async function POST(req: Request, res: Response) {
       : 0;
     const docRef = doc(db, "transactions", transaction.fbaseId);
     const status = orderTrack.data.status.split("_").join(" ");
+    console.log("body", {
+      "shipping_status.history": orderTrack.data.history.map(
+        (historyList: any) => ({
+          ...historyList,
+          status: historyList.status.split("_").join(" "),
+        })
+      ),
+      status:
+        status === "allocated"
+          ? "003"
+          : status === "picking up"
+          ? "114"
+          : status === "picked"
+          ? "214"
+          : status === "dropping off"
+          ? "314"
+          : status === "delivered"
+          ? "004"
+          : "",
+      transaction_status:
+        status === "delivered"
+          ? {
+              status: "DONE",
+              expired_at: new Date(
+                new Date().getTime() + 60 * 60 * 1000
+              ).toISOString(),
+            }
+          : undefined,
+    });
 
     await updateDoc(docRef, {
       "shipping_status.history": orderTrack.data.history.map(

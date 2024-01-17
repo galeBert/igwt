@@ -49,7 +49,7 @@ export default function MainCard({ user, userId }: MainCardProps) {
         <div className="bg-white pointer-events-none absolute w-full h-full left-0 rounded-md opacity-5" />
         <CardHeader className="w-full">
           <CardTitle className="text-xl">Balance</CardTitle>
-          <button
+          {/* <button
             onClick={() => {
               axios
                 .post(
@@ -66,7 +66,7 @@ export default function MainCard({ user, userId }: MainCardProps) {
             }}
           >
             test 1231231
-          </button>
+          </button> */}
           <CardTitle>{formatter.format(balance)}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 ">

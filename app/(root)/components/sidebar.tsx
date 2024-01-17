@@ -17,8 +17,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="flex flex-col space-y-4 justify-between h-full">
-      <div className="flex flex-col space-x-4 justify-center">
+    <div className="flex flex-col space-y-4 justify-between items-center w-full h-full px-2">
+      <div className="flex flex-col w-full space-y-2 justify-center">
         {navList.map((nav, idx) => {
           return (
             <Link className="w-full" key={idx} href={nav.href}>
@@ -33,7 +33,7 @@ export default function Sidebar() {
         })}
       </div>
       <SignOutButton>
-        <Button className="bg-red-500 text-white">Sign Out</Button>
+        <Button className="bg-red-500 w-full text-white">Sign Out</Button>
       </SignOutButton>
     </div>
   );

@@ -64,6 +64,8 @@ export async function POST(req: Request, res: Response) {
       ...orderTrack.data,
     });
   } catch (error: any) {
+    console.log(error);
+
     throw new Error("BITESHIP_CREATE_ORDER", error);
   }
 }
