@@ -38,6 +38,13 @@ export async function POST(req: Request, res: Response) {
       where("shipping_status.tracking_id", "==", data.courier_tracking_id)
     );
     const querySnapshot = await getDocs(q);
+    console.log({ querySnapshot: querySnapshot });
+    console.log("for each", {
+      querySnapshot: querySnapshot.forEach((doc) => {
+        transaction = { fbaseId: doc.id, ...doc.data() };
+      }),
+    });
+
     querySnapshot.forEach((doc) => {
       transaction = { fbaseId: doc.id, ...doc.data() };
     });
@@ -95,15 +102,13 @@ export async function POST(req: Request, res: Response) {
           : status === "delivered"
           ? "004"
           : "",
-      transaction_status:
-        status === "delivered"
-          ? {
-              status: "DONE",
-              expired_at: new Date(
-                new Date().getTime() + 60 * 60 * 1000
-              ).toISOString(),
-            }
-          : undefined,
+      transaction_status: {
+        status: status === "delivered" ? "DONE" : "ONPROGRESS",
+        expired_at:
+          status === "delivered"
+            ? new Date(new Date().getTime() + 60 * 60 * 1000).toISOString()
+            : null,
+      },
     });
 
     const transactionData = await axios.post(
