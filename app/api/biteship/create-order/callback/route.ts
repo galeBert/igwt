@@ -123,7 +123,7 @@ export async function POST(req: Request, res: Response) {
 
       return NextResponse.json(transactionData);
     }
-    return "not found";
+    return new NextResponse("no found");
   } catch (error) {
     console.log("error", error);
 
