@@ -53,7 +53,6 @@ export default function SingleTransaction({
         user?.emailAddresses[0].emailAddress
       );
       if (notReadByMe) {
-
         const newData =
           data?.notReadBy?.filter(
             (read) => read !== user.emailAddresses[0].emailAddress
@@ -71,10 +70,6 @@ export default function SingleTransaction({
   );
 
   const handleFinishTransaction = async () => {
-    await axios.patch(`/api/transactions`, {
-      transactionId,
-      transaction_status: { status: "FINISHED" },
-    });
     await axios.patch(`/api/transactions`, {
       transactionId,
       transaction_status: { status: "FINISHED" },
@@ -161,7 +156,7 @@ export default function SingleTransaction({
                   count.api.start();
                 }, 100);
                 if (count.completed) {
-                  // handleFinishTransaction();
+                  handleFinishTransaction();
                   return (
                     <Button onClick={handleFinishTransaction} className="!py-0">
                       Transaction Completed

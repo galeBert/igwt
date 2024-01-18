@@ -16,11 +16,11 @@ export async function POST(
   { params }: { params: { userId: string } }
 ) {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
 
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    // if (!userId) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
 
     const body = await req.json();
     const {
@@ -68,7 +68,7 @@ export async function POST(
       }
     }
 
-    await addDoc(collection(db, `user/${userId}/balance`), {
+    await addDoc(collection(db, `user/${params.userId}/balance`), {
       amount,
       status,
       type: "income",
