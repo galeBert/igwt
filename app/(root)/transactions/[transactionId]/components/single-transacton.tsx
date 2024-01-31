@@ -77,7 +77,7 @@ export default function SingleTransaction({
     await axios.post(`/api/${data?.userId}/balance`, {
       transactionId,
       role: data?.role,
-      amount: (data?.price ?? 0) + (data?.selectedShipper?.price ?? 0),
+      amount: data?.price ?? 0,
       from: data?.reciever?.email,
       to: data?.sender?.email,
       transactionUserId: data?.userId,

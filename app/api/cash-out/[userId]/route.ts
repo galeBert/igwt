@@ -22,7 +22,6 @@ export async function GET(
     querySnapshot.forEach((doc) => {
       transactions.push({ ...doc.data(), id: doc.id });
     });
-    console.log("transactions", transactions);
 
     return NextResponse.json(transactions);
   } catch (error: any) {

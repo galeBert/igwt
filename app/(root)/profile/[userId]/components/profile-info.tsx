@@ -57,14 +57,6 @@ export default function ProfileInfo({ data }: ProfileInfo) {
     <div>
       <Card>
         <CardHeader>Info</CardHeader>
-        <CardContent>
-          <CardDescription className="text-">
-            Balance: {formatter.format(Number(data.balance))}
-          </CardDescription>
-          <CardDescription className="text-">
-            Balance: {data.balance}
-          </CardDescription>
-        </CardContent>
       </Card>
       <AddressForm
         data={data}
