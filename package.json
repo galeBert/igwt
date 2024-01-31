@@ -80,6 +80,7 @@
   "devDependencies": {
     "@types/react-text-mask": "^5.4.14",
     "@types/validator": "^13.11.2",
+    "encoding": "^0.1.13",
     "eslint-plugin-validate-jsx-nesting": "^0.1.1"
   }
 }
