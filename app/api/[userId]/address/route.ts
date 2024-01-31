@@ -6,10 +6,10 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { colorId: string } }
+  { params }: { params: { userId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const { userId } = params;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
