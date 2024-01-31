@@ -12,7 +12,6 @@ export async function POST(req: Request, res: NextApiResponse) {
     const header = headers().get("authorization");
     if (header) {
       const admin = initializeFirebaseAdmin();
-      console.log(header);
 
       const token = header.split(" ")[1];
 
@@ -20,7 +19,6 @@ export async function POST(req: Request, res: NextApiResponse) {
         .auth()
         .verifyIdToken(token)
         .then((decodedToken: any) => {
-          const uid = decodedToken.uid;
           clerkClient.users
             .createUser({
               emailAddress: [decodedToken.email ?? ""],
@@ -29,11 +27,13 @@ export async function POST(req: Request, res: NextApiResponse) {
               const { id } = dataclerk;
 
               const transactionRef = doc(db, "user", id);
+              console.log("clerk jalan", dataclerk);
 
               await setDoc(transactionRef, {
                 email: decodedToken.email,
               });
-            });
+            })
+            .catch((error) => console.log("clerk error", error));
         })
         .catch((error: any) => {
           console.log("asdsaddsa", error);
