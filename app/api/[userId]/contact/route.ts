@@ -16,12 +16,12 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params }: { params: { colorId: string } }
+  { params }: { params: { userId: string } }
 ) {
   try {
-    const { userId } = auth();
+    // const { userId } = auth();
 
-    if (!userId) {
+    if (!params.userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -39,7 +39,7 @@ export async function POST(
       description,
     } = body;
 
-    await addDoc(collection(db, `user/${userId}/contact`), {
+    await addDoc(collection(db, `user/${params.userId}/contact`), {
       province,
       district,
       city,
