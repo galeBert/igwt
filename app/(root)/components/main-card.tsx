@@ -56,25 +56,6 @@ export default function MainCard({ user, userId }: MainCardProps) {
           <div className="space-x-3">
             <Button onClick={handleCreateTransaction}>Create new order</Button>
             <CashOutMoneyModal userId={userId} />
-            <Button
-              onClick={async () => {
-                const transactionData = await axios.post(
-                  `api/create-transaction-email`,
-                  {
-                    inviteLink: "https://google.com",
-                    productName: "https://www.igwt.space/",
-                    recieverEmail: "ggalilea007@gmail.com",
-                    recieverName: "https://www.igwt.space/",
-                    senderEmail: "ggalilea007@gmail.com",
-                    senderName: "https://www.igwt.space/",
-                    senderPhoto: "https://www.igwt.space/",
-                  }
-                );
-                console.log(transactionData);
-              }}
-            >
-              Send Email
-            </Button>
           </div>
         </CardContent>
         <AddUserAddresModal onSubmit={() => {}} />

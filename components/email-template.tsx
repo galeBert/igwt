@@ -26,7 +26,7 @@ interface VercelInviteUserEmailProps {
 
 export const EmailTemplate = ({
   senderName = "albert",
-  senderEmail = "igwt@example.com",
+  senderEmail = "albert@igwt.space",
   recieverName = "someone",
   productName = "something",
   inviteLink = "https://vercel.com/teams/invite/foo",
@@ -97,7 +97,7 @@ export const EmailTemplate = ({
             <Section className="text-center mt-[32px] mb-[32px]">
               <Button
                 className="bg-[#000000] px-5 py-3 rounded text-white text-[12px] font-semibold no-underline text-center"
-                href={inviteLink}
+                href={`https://www.igwt.space/transactions/${inviteLink}`}
               >
                 See Transaction
               </Button>
