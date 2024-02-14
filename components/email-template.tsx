@@ -68,30 +68,9 @@ export const EmailTemplate = ({
             </Text>
             <Section>
               <Row>
-                <Column align="right">
-                  <Img
-                    className="rounded-full"
-                    src="https://github.com/shadcn.png"
-                    width="64"
-                    height="64"
-                  />
-                </Column>
-                <Column align="center">
-                  <Img
-                    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLW1vdmUtcmlnaHQiPjxwYXRoIGQ9Ik0xOCA4TDIyIDEyTDE4IDE2Ii8+PHBhdGggZD0iTTIgMTJIMjIiLz48L3N2Zz4="
-                    width="12"
-                    height="9"
-                    alt="invited you to"
-                  />
-                </Column>
-                <Column align="left">
-                  <Img
-                    className="rounded-full"
-                    src="https://github.com/shadcn.png"
-                    width="64"
-                    height="64"
-                  />
-                </Column>
+                <Column align="right"></Column>
+                <Column align="center"></Column>
+                <Column align="left"></Column>
               </Row>
             </Section>
             <Section className="text-center mt-[32px] mb-[32px]">
