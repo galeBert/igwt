@@ -41,13 +41,13 @@ export const EmailTemplate = ({
         <Body className="bg-white my-auto mx-auto font-sans">
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Section className="mt-[32px]">
-              <Img
+              {/* <Img
                 src={`https://firebasestorage.googleapis.com/v0/b/igwt-3b1a7.appspot.com/o/fix-igwt-bordered-logo.png?alt=media&token=243eb52a-16ad-469e-8b1e-991cd873e436`}
                 width="40"
                 height="37"
                 alt="IGWT"
                 className="my-0 mx-auto"
-              />
+              /> */}
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
               Transaction Invititation on &nbsp; <strong>IGWT</strong>
