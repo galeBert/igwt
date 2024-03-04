@@ -27,8 +27,15 @@ export const EmailTemplate = ({
       </h3>
 
       <div>
-        See Transaction at https://www.igwt.space/transactions/
-        {inviteLink}
+        See Transaction at
+        <a
+          href={`https://www.igwt.space/transactions/
+          ${inviteLink}`}
+          target="_blank"
+        >
+          https://www.igwt.space/transactions/
+          {inviteLink}
+        </a>
       </div>
     </div>
   );
