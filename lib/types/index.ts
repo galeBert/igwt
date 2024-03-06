@@ -16,6 +16,10 @@ export type ShippingAddressData = {
   address?: string;
 };
 
+export type PricingList = {
+  name: string;
+  shipping: ShippingPriceListData[];
+};
 export type ShippingPriceListData = {
   available_for_cash_on_delivery: boolean;
   available_for_proof_of_delivery: boolean;

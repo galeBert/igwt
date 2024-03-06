@@ -1,5 +1,9 @@
 import { AddressData } from "@/components/form/address-form";
-import { ShippingAddressData, ShippingPriceListData } from "@/lib/types";
+import {
+  PricingList,
+  ShippingAddressData,
+  ShippingPriceListData,
+} from "@/lib/types";
 import { create } from "zustand";
 
 interface useCreateTransactionStore {
@@ -56,7 +60,7 @@ export type TTransactionData = {
     code: number;
     origin: ShippingAddressData;
     destination: ShippingAddressData;
-    pricing: ShippingPriceListData[];
+    pricing: PricingList[];
     shipping_type?: string;
   };
   shipping_status?: { waybill_id: string; status: string };

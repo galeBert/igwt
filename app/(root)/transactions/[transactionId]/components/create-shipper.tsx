@@ -38,6 +38,7 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
     getTransaction(transactionId)
   );
   const [loading, setLoading] = useState(false);
+  console.log({ data });
 
   const [open, setOpen] = useState(false);
   const { user } = useUser();
@@ -45,7 +46,11 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
 
   const handleUpdateTransaction = async () => {
     setLoading(true);
-    if (!data?.shipping && data) {
+    console.log("jalan ga sie1");
+
+    if (!data?.shipping?.pricing.length) {
+      console.log("jalan ga sie");
+
       const shipdata = await axios.post("/api/biteship/courier-rate", {
         origin_area_id: data?.sender?.address_id,
         destination_area_id: data?.reciever?.address_id,
@@ -139,25 +144,6 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
     }
   };
 
-  const check = new Set();
-  const shipperList =
-    data?.shipping?.pricing.map((obj, idx, arr) => {
-      if (!check.has(obj["courier_name"])) {
-        check.add(obj["courier_name"]);
-      } else {
-        return {
-          name: obj.courier_name,
-          shipping: [obj, arr[idx - 1]],
-        };
-      }
-      return { name: obj.courier_name, shipping: [obj] };
-    }) ?? [];
-
-  const shipperListFilltered = removeDuplicateObjectFromArray(
-    shipperList.reverse(),
-    "name"
-  );
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {data?.selectedShipper &&
@@ -190,7 +176,7 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
           )}
         </Button>
       ) : null}
-      {!isSender ? (
+      {isSender ? (
         <DialogTrigger onClick={handleUpdateTransaction} asChild>
           <Button
             variant={data?.selectedShipper ? "outline" : "default"}
@@ -230,7 +216,7 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
           <Card>
             <CardContent>
               <Accordion type="single" collapsible className="w-full">
-                {shipperListFilltered.reverse().map((shipper, key) => {
+                {data?.shipping?.pricing.reverse().map((shipper, key) => {
                   return (
                     <AccordionItem key={key} value={shipper.name}>
                       <AccordionTrigger>{shipper.name}</AccordionTrigger>

@@ -1,4 +1,5 @@
 import { db } from "@/lib/firebase";
+import { removeDuplicateObjectFromArray } from "@/lib/helpers";
 import { auth } from "@clerk/nextjs";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Error from "next/error";
@@ -15,8 +16,40 @@ export async function GET(
     const transactionRef = doc(db, "transactions", params.transactionId);
 
     const singleTransaction = await (await getDoc(transactionRef)).data();
+    const check = new Set();
+    const shipperList =
+      singleTransaction?.shipping?.pricing.map(
+        (
+          obj: { [x: string]: unknown; courier_name: any },
+          idx: number,
+          arr: any[]
+        ) => {
+          if (!check.has(obj["courier_name"])) {
+            check.add(obj["courier_name"]);
+          } else {
+            return {
+              name: obj.courier_name,
+              shipping: [obj, arr[idx - 1]],
+            };
+          }
+          return { name: obj.courier_name, shipping: [obj] };
+        }
+      ) ?? [];
+
+    const shipperListFilltered = removeDuplicateObjectFromArray(
+      shipperList.reverse(),
+      "name"
+    );
+
     if (singleTransaction) {
-      return NextResponse.json(singleTransaction);
+      const editedPricing = {
+        ...singleTransaction,
+        shipping: {
+          ...singleTransaction.shipping,
+          pricing: shipperListFilltered,
+        },
+      };
+      return NextResponse.json(editedPricing);
     }
     return NextResponse.json(null);
   } catch (error) {
