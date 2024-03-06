@@ -2,7 +2,6 @@ import { db } from "@/lib/firebase";
 import { removeDuplicateObjectFromArray } from "@/lib/helpers";
 import { auth } from "@clerk/nextjs";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import Error from "next/error";
 import { NextResponse } from "next/server";
 
 export async function GET(

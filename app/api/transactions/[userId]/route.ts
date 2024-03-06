@@ -19,7 +19,8 @@ export async function GET(
       or(
         where("sender.email", "==", params.userId),
         where("reciever.email", "==", params.userId)
-      )
+      ),
+      orderBy("createdAt", "desc")
     );
 
     const querySnapshot = await getDocs(q);
