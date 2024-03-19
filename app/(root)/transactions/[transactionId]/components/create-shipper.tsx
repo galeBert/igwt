@@ -38,7 +38,6 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
     getTransaction(transactionId)
   );
   const [loading, setLoading] = useState(false);
-  console.log({ data });
 
   const [open, setOpen] = useState(false);
   const { user } = useUser();
@@ -46,11 +45,8 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
 
   const handleUpdateTransaction = async () => {
     setLoading(true);
-    console.log("jalan ga sie1");
 
     if (!data?.shipping?.pricing.length) {
-      console.log("jalan ga sie");
-
       const shipdata = await axios.post("/api/biteship/courier-rate", {
         origin_area_id: data?.sender?.address_id,
         destination_area_id: data?.reciever?.address_id,
@@ -149,7 +145,7 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
       {data?.selectedShipper &&
       data?.payment?.bill_payment.status === "SUCCESSFUL" &&
       !data?.shipping_status &&
-      isSender ? (
+      !isSender ? (
         <Button
           disabled={loading}
           className="space-x-1 flex items-center relative"
@@ -176,7 +172,7 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
           )}
         </Button>
       ) : null}
-      {isSender ? (
+      {!isSender ? (
         <DialogTrigger onClick={handleUpdateTransaction} asChild>
           <Button
             variant={data?.selectedShipper ? "outline" : "default"}

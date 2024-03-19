@@ -41,7 +41,9 @@ export async function POST(req: Request, res: NextApiResponse) {
     }
     return NextResponse.json(null);
   } catch (error) {
-    console.log(error);
+    console.log(() => {
+      10;
+    });
 
     return NextResponse.json({ error });
   }
