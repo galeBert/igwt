@@ -32,9 +32,11 @@ export default function Sidebar() {
           );
         })}
       </div>
-      <SignOutButton>
-        <Button className="bg-red-500 w-full text-white">Sign Out</Button>
-      </SignOutButton>
+      {user ? (
+        <SignOutButton>
+          <Button className="bg-red-500 w-full text-white">Sign Out</Button>
+        </SignOutButton>
+      ) : null}
     </div>
   );
 }
