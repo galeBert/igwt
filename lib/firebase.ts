@@ -3,10 +3,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getFirestore, QueryDocumentSnapshot } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { cert } from "firebase-admin/app";
-import * as admin from "firebase-admin";
-import { auth } from "firebase-admin";
+import { getMessaging } from "firebase/messaging";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -38,7 +35,6 @@ const app = initializeApp(firebaseConfig);
 // const _admin = admin.initializeApp(firebaseAdminConfig, "igwt-admin");
 
 const db = getFirestore(app);
-const testAuth = getAuth();
-// const adminAuth = auth(_admin);
+const messaging = getFirestore(app);
 
-export { db, converter, testAuth };
+export { db, converter, messaging };
