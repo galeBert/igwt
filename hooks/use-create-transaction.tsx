@@ -19,6 +19,7 @@ export interface UserData extends AddressData {
   email: string;
   balance: number;
   userId: string;
+  fCMToken?: string;
 }
 export type CashTransactionData = {
   amount: number;

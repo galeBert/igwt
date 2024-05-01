@@ -2,6 +2,7 @@ import { TTransactionData } from "@/hooks/use-create-transaction";
 import { oneHourfromNowFlipFormat } from "@/lib/helpers";
 import axios from "axios";
 import { NextResponse } from "next/server";
+import { sendNotification } from "./send-notification";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -15,8 +16,32 @@ export const createTransaction = async ({ data, userId }: PaymentData) => {
       `${url}/api/${userId}/transaction`,
       { ...data, notReadBy: [data.sender?.email, data.reciever?.email] }
     );
+
     if (transactionData.data) {
       const data: TTransactionData = transactionData.data;
+      const transactionStarter =
+        data.role === "sender" ? data.sender : data.reciever;
+
+      const transactionReciever =
+        data.role === "sender" ? data.reciever : data.sender;
+
+      const fcm = await axios.get(
+        `${url}/api/${transactionReciever?.email}/getToken`
+      );
+      console.log({ fcm, transactionReciever });
+
+      if (fcm.data && data.id) {
+        console.log(
+          `Sending a push notification to ${transactionReciever?.email}`
+        );
+
+        sendNotification({
+          message: `${transactionStarter?.email} has invite you to transactions`,
+          token: fcm.data.fCMToken,
+          data: { transactionId: data.id },
+        });
+      }
+
       return data;
     }
   } catch (error) {

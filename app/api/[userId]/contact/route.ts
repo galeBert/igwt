@@ -35,22 +35,39 @@ export async function POST(
       city,
       province,
       name,
+      fCMToken,
       street_name,
       description,
     } = body;
 
-    await addDoc(collection(db, `user/${params.userId}/contact`), {
-      province,
-      district,
-      city,
-      address_id,
-      postalcode,
-      name,
-      formated_address,
-      street_name,
-      description: description ?? "",
-      email,
-    });
+    if (fCMToken) {
+      await addDoc(collection(db, `user/${params.userId}/contact`), {
+        province,
+        district,
+        city,
+        address_id,
+        postalcode,
+        name,
+        formated_address,
+        street_name,
+        description: description ?? "",
+        email,
+        fCMToken,
+      });
+    } else {
+      await addDoc(collection(db, `user/${params.userId}/contact`), {
+        province,
+        district,
+        city,
+        address_id,
+        postalcode,
+        name,
+        formated_address,
+        street_name,
+        description: description ?? "",
+        email,
+      });
+    }
 
     return NextResponse.json({ hello: "world" });
   } catch (error) {

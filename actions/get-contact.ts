@@ -3,6 +3,7 @@ import axios from "axios";
 
 export type ContactData = {
   city: string;
+  fCMToken?: string;
   district: string;
   province: string;
   postalCode: string;

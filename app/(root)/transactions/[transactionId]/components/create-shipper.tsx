@@ -142,15 +142,10 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button
-        disabled={loading}
-        className="space-x-1 flex items-center relative"
-        onClick={handleRequestPickup}
-      ></Button>
       {data?.selectedShipper &&
       data?.payment?.bill_payment.status === "SUCCESSFUL" &&
       !data?.shipping_status &&
-      !isSender ? (
+      isSender ? (
         <Button
           disabled={loading}
           className="space-x-1 flex items-center relative"
@@ -177,16 +172,16 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
           )}
         </Button>
       ) : null}
-      {isSender ? (
+      {!isSender ? (
         <DialogTrigger onClick={handleUpdateTransaction} asChild>
           <Button
             variant={data?.selectedShipper ? "outline" : "default"}
             className="space-x-1"
           >
-            {!data?.selectedShipper ? (
+            {data?.selectedShipper ? (
               <>
                 <CheckCircledIcon className="bg-green-600 rounded-full text-white w-5 h-5 " />
-                <p>Shippier Selected</p>
+                <p>Shipper Selected</p>
               </>
             ) : (
               <p>Click here to choose shipping</p>

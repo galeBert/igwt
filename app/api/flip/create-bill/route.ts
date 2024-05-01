@@ -44,6 +44,7 @@ export async function POST(req: Request, res: Response) {
     const { expired_date, ...createBillResponse } = response.data;
 
     const transactionRef = doc(db, "transactions", transactionId);
+    console.log({ createBillResponse });
 
     await updateDoc(transactionRef, {
       payment: {
