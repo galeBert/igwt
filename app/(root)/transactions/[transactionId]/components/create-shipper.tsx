@@ -117,13 +117,6 @@ export default function CreateShipper({ transactionId }: CreateShipperProps) {
       ) {
         const { sender, reciever, package_detail, selectedShipper } = data;
 
-        console.log({
-          packageItems: [package_detail],
-          reciever,
-          selectedShipper,
-          sender,
-          transactionId,
-        });
         await createOrder({
           packageItems: [package_detail],
           reciever,

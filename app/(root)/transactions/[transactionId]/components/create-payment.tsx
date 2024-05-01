@@ -74,7 +74,9 @@ export default function CreatePayment({ transactionId }: CreatePaymentProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {data?.selectedShipper && !isSender ? (
+      {data?.selectedShipper &&
+      data.payment?.bill_payment.status !== "SUCCESSFUL" &&
+      !isSender ? (
         <DialogTrigger asChild>
           <Button
             className="space-x-2"

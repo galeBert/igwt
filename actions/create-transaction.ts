@@ -1,7 +1,6 @@
 import { TTransactionData } from "@/hooks/use-create-transaction";
 import { oneHourfromNowFlipFormat } from "@/lib/helpers";
 import axios from "axios";
-import { NextResponse } from "next/server";
 import { sendNotification } from "./send-notification";
 
 const url = process.env.NEXT_PUBLIC_API_URL;

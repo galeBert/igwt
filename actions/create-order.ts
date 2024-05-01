@@ -2,6 +2,7 @@ import { TTransactionData, UserData } from "@/hooks/use-create-transaction";
 
 import { ShippingPriceListData } from "@/lib/types";
 import axios from "axios";
+import { sendNotification } from "./send-notification";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -46,12 +47,36 @@ export const createOrder = async ({
       }
     );
     const awaitedTransactionData: TTransactionData = await transactionData.data;
+
+    if (transactionData) {
+      const data: TTransactionData = transactionData.data;
+      const transactionStarter =
+        data.role === "sender" ? data.sender : data.reciever;
+
+      const transactionReciever =
+        data.role === "sender" ? data.reciever : data.sender;
+
+      const fcm = await axios.get(
+        `${url}/api/${data.reciever?.fCMToken}/getToken`
+      );
+      if (fcm.data && data.id) {
+        console.log(
+          `Sending a push notification to ${transactionReciever?.email}`
+        );
+
+        sendNotification({
+          message: `${data.sender?.email} requeting to pick up`,
+          token: fcm.data.fCMToken,
+          data: { transactionId: data.id },
+        });
+      }
+    }
     await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions`, {
       transactionId,
       shipping_status: { ...awaitedTransactionData },
       status: "013",
     });
-print()
+
     await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${transactionId}/transaction-log`,
       {
