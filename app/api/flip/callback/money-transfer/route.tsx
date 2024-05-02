@@ -50,14 +50,17 @@ export async function POST(req: Request, res: Response) {
 
       if (docSnap.exists()) {
         const admin = initializeFirebaseAdmin().messaging();
-
-        await admin.send({
-          notification: {
-            body: "Your Cashout Transaction has been Successful!",
-            title: "IGWT",
-          },
-          token: docSnap.data().fCMToken,
-        });
+        console.log({ test: docSnap.data().fCMToken });
+        await admin
+          .send({
+            notification: {
+              body: "Your Cashout  Transaction has been Successful!",
+              title: "IGWT",
+            },
+            token: docSnap.data().fCMToken.toString(),
+          })
+          .then((response) => console.log({ response }))
+          .catch((error) => console.log({ error }));
       }
 
       if (selectedTransaction) {
