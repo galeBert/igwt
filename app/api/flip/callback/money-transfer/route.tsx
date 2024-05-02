@@ -1,9 +1,11 @@
 import { db } from "@/lib/firebase";
+import { initializeFirebaseAdmin } from "@/lib/firebase-admin";
 import { translateToURLencoded } from "@/lib/helpers";
 import axios from "axios";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -42,9 +44,21 @@ export async function POST(req: Request, res: Response) {
       querySnapshot.forEach((doc) => {
         selectedTransaction = { ...doc.data(), fBaseId: doc.id };
       });
-      console.log(selectedTransaction, data, {
-        test: userId,
-      });
+      //find user fcm token to send notifications
+      const docRef = doc(db, "user", userId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const admin = initializeFirebaseAdmin().messaging();
+
+        await admin.send({
+          notification: {
+            body: "Your Cashout Transaction has been Successful!",
+            title: "IGWT",
+          },
+          token: docSnap.data().fCMToken,
+        });
+      }
 
       if (selectedTransaction) {
         const washingtonRef = doc(
