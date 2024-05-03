@@ -2,6 +2,8 @@ import type { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { Auth } from "googleapis";
 import axios from "axios";
+import messageKey from "@/message.json";
+
 export async function POST(req: Request, res: NextApiResponse) {
   try {
     const body = await req.json();
@@ -32,12 +34,9 @@ export async function POST(req: Request, res: NextApiResponse) {
     // };
 
     const jwtClient = new Auth.JWT(
-      process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
+      messageKey.client_email,
       undefined,
-      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_PRIVATE_KEY!.replace(
-        /\\n/gm,
-        "\n"
-      ),
+      messageKey.private_key,
       SCOPES,
       undefined
     );
