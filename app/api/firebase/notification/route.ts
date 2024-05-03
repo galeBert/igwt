@@ -1,7 +1,6 @@
 import type { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { Auth } from "googleapis";
-import messageKey from "@/message.json";
 import axios from "axios";
 export async function POST(req: Request, res: NextApiResponse) {
   try {
@@ -33,9 +32,12 @@ export async function POST(req: Request, res: NextApiResponse) {
     // };
 
     const jwtClient = new Auth.JWT(
-      messageKey.client_email,
+      process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
       undefined,
-      messageKey.private_key,
+      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_PRIVATE_KEY!.replace(
+        /\\n/gm,
+        "\n"
+      ),
       SCOPES,
       undefined
     );
@@ -57,7 +59,7 @@ export async function POST(req: Request, res: NextApiResponse) {
       { headers: { Authorization: `Bearer ${oauthToken.access_token}` } }
     );
 
-    return NextResponse.json({ result });
+    return NextResponse.json({ result: await result.data });
     // const admin = initializeFirebaseAdmin().messaging();
 
     // return admin
