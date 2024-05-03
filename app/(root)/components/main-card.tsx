@@ -65,7 +65,6 @@ export default function MainCard({ user, userId }: MainCardProps) {
           <div className="space-x-3">
             <Button onClick={handleCreateTransaction}>Create new order</Button>
             <CashOutMoneyModal userId={userId} />
-            <Button onClick={handleTestNotif}>Test Notif</Button>
           </div>
         </CardContent>
         <AddUserAddresModal onSubmit={() => {}} />
