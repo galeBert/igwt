@@ -1,4 +1,5 @@
 "use client";
+import { sendNotification } from "@/actions/send-notification";
 import AddUserAddresModal from "@/components/add-user-address-modal.tsx";
 import { CashOutMoneyModal } from "@/components/cash-out-modal";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,14 @@ export default function MainCard({ user, userId }: MainCardProps) {
     addAddressData();
   };
 
+  const handleTestNotif = () => {
+    sendNotification({
+      message: "test dari web",
+      token:
+        "fbW70EiFSKKfkEgP3yJJdV:APA91bHI8uYSXjGFYG2OUNiWBxUaG7ip1IxQStoxd21RisKaCMjteV-9nFkkwxUSXpC79Wp0QTbgeWLcL_9mIK1J2YtqUAsS1slEd3UDx-rHragrmrzLzlILxk8qHr_rvtPuJ9gtTRB0",
+    });
+  };
+
   return (
     <>
       <CardContent
@@ -56,6 +65,7 @@ export default function MainCard({ user, userId }: MainCardProps) {
           <div className="space-x-3">
             <Button onClick={handleCreateTransaction}>Create new order</Button>
             <CashOutMoneyModal userId={userId} />
+            <Button onClick={handleTestNotif}>Test Notif</Button>
           </div>
         </CardContent>
         <AddUserAddresModal onSubmit={() => {}} />
