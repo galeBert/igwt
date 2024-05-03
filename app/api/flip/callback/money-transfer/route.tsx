@@ -49,27 +49,26 @@ export async function POST(req: Request, res: Response) {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        // axios
-        //   .post("https://www.igwt.space/api/firebase/notification", {
-        //     message: "Your Cashout Transaction has been Successful!",
-        //     title: "IGWT",
-        //     token: docSnap.data().fCMToken,
-        //   })
-        //   .then((response) => console.log({ response }))
-        //   .catch((error) => console.log({ error }));
-
-        const admin = initializeFirebaseAdmin().messaging();
-        console.log({ test: docSnap.data().fCMToken });
-        await admin
-          .send({
-            notification: {
-              body: "Your Cashout  Transaction has been Successful!",
-              title: "IGWT",
-            },
-            token: docSnap.data().fCMToken.toString(),
+        axios
+          .post("https://www.igwt.space/api/firebase/notification", {
+            message: "Your Cashout Transaction has been Successful!",
+            title: "IGWT",
+            token: docSnap.data().fCMToken,
           })
           .then((response) => console.log({ response }))
           .catch((error) => console.log({ error }));
+        //   const admin = initializeFirebaseAdmin().messaging();
+        //   console.log({ test: docSnap.data().fCMToken });
+        //   await admin
+        //     .send({
+        //       notification: {
+        //         body: "Your Cashout  Transaction has been Successful!",
+        //         title: "IGWT",
+        //       },
+        //       token: docSnap.data().fCMToken.toString(),
+        //     })
+        //     .then((response) => console.log({ response }))
+        //     .catch((error) => console.log({ error }));
       }
 
       if (selectedTransaction) {
@@ -84,11 +83,6 @@ export async function POST(req: Request, res: Response) {
         };
 
         await updateDoc(washingtonRef, newData);
-
-        // const reFetchData = await fetch(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/api/transaction/${selectedTransaction?.fBaseId}`,
-        //   { method: "GET" }
-        // );
 
         return NextResponse.json(newData);
       }
