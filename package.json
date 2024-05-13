@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && next build",
+    "build": "next build --openssl-legacy-provider",
     "start": "next start",
     "lint": "next lint"
   },
@@ -57,6 +57,7 @@
     "moment": "^2.29.4",
     "next": "13.5.2",
     "next-themes": "^0.2.1",
+    "node": "^20.13.1",
     "postcss": "8.4.30",
     "query-string": "^8.1.0",
     "react": "18.2.0",
