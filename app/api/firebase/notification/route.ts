@@ -16,9 +16,7 @@ export async function POST(req: Request, res: NextApiResponse) {
     const jwtClient = new Auth.JWT(
       process.env.FIREBASE_CLIENT_EMAIL,
       undefined,
-      process.env.FIREBASE_PRIVATE_KEY
-        ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/gm, "\n")
-        : undefined,
+      process.env.FIREBASE_PRIVATE_KEY,
       SCOPES,
       undefined
     );
