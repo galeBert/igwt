@@ -13,31 +13,11 @@ export async function POST(req: Request, res: NextApiResponse) {
       "https://www.googleapis.com/auth/firebase.messaging";
     const SCOPES = [MESSAGING_SCOPE];
 
-    // const getAccessToken = async () => {
-    //   return await new Promise(function (resolve, reject) {
-    //     const jwtClient = new Auth.JWT(
-    //       messageKey.client_email,
-    //       undefined,
-    //       messageKey.private_key,
-    //       SCOPES,
-    //       undefined
-    //     );
-
-    //     return jwtClient.authorize(function (err, tokens) {
-    //       if (err) {
-    //         reject(err);
-    //         return;
-    //       }
-    //       return resolve(tokens?.access_token);
-    //     });
-    //   });
-    // };
-
     const jwtClient = new Auth.JWT(
-      process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
+      process.env.FIREBASE_CLIENT_EMAIL,
       undefined,
-      process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY
-        ? process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY.replace(/\\n/gm, "\n")
+      process.env.FIREBASE_PRIVATE_KEY
+        ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/gm, "\n")
         : undefined,
       SCOPES,
       undefined
