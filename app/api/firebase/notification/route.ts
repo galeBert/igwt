@@ -34,9 +34,11 @@ export async function POST(req: Request, res: NextApiResponse) {
     // };
 
     const jwtClient = new Auth.JWT(
-      messageKey.client_email,
+      process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
       undefined,
-      messageKey.private_key,
+      process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY
+        ? process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY.replace(/\\n/gm, "\n")
+        : undefined,
       SCOPES,
       undefined
     );

@@ -64,6 +64,17 @@ export default function MainCard({ user, userId }: MainCardProps) {
           <CardDescription>What are you gonna do today?</CardDescription>
           <div className="space-x-3">
             <Button onClick={handleCreateTransaction}>Create new order</Button>
+            <Button
+              onClick={() => {
+                sendNotification({
+                  message: "hai",
+                  token:
+                    "fbW70EiFSKKfkEgP3yJJdV:APA91bHI8uYSXjGFYG2OUNiWBxUaG7ip1IxQStoxd21RisKaCMjteV-9nFkkwxUSXpC79Wp0QTbgeWLcL_9mIK1J2YtqUAsS1slEd3UDx-rHragrmrzLzlILxk8qHr_rvtPuJ9gtTRB0",
+                });
+              }}
+            >
+              send notif
+            </Button>
             <CashOutMoneyModal userId={userId} />
           </div>
         </CardContent>
