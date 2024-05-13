@@ -8,6 +8,9 @@ export async function POST(req: Request, res: NextApiResponse) {
   try {
     const body = await req.json();
     const { message, title, data, token } = body;
+    const credential = JSON.parse(
+      Buffer.from(process.env?.ENCODE_FCM_KEY ?? "", "base64").toString()
+    );
 
     const MESSAGING_SCOPE =
       "https://www.googleapis.com/auth/firebase.messaging";
@@ -16,9 +19,7 @@ export async function POST(req: Request, res: NextApiResponse) {
     const jwtClient = new Auth.JWT(
       process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
       undefined,
-      process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY
-        ? process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY.replace(/\\n/gm, "\n")
-        : undefined,
+      credential.private_key,
       SCOPES,
       undefined
     );
@@ -41,21 +42,8 @@ export async function POST(req: Request, res: NextApiResponse) {
     );
 
     return NextResponse.json({ result: await result.data });
-    // const admin = initializeFirebaseAdmin().messaging();
-
-    // return admin
-    //   .send({
-    //     notification: {
-    //       body: message,
-    //       title,
-    //     },
-    //     data,
-    //     token,
-    //   })
-    //   .then((response) => NextResponse.json({ response }))
-    //   .catch((error) => NextResponse.json({ error }));
   } catch (error) {
-    console.log(error);
+    console.log({ qqqqqq: error });
 
     return NextResponse.json({ error });
   }
