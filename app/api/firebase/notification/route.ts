@@ -2,7 +2,6 @@ import type { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { Auth } from "googleapis";
 import axios from "axios";
-import messageKey from "@/message.json";
 
 export async function POST(req: Request, res: NextApiResponse) {
   try {
@@ -17,7 +16,7 @@ export async function POST(req: Request, res: NextApiResponse) {
     const SCOPES = [MESSAGING_SCOPE];
 
     const jwtClient = new Auth.JWT(
-      process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
+      credential.client_email,
       undefined,
       credential.private_key,
       SCOPES,
