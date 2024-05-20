@@ -40,6 +40,8 @@ export async function POST(req: Request, res: NextApiResponse) {
       { headers: { Authorization: `Bearer ${oauthToken.access_token}` } }
     );
 
+    jwtClient.off();
+
     return NextResponse.json({ result: await result.data });
   } catch (error) {
     console.log({ qqqqqq: error });

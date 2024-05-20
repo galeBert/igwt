@@ -67,7 +67,8 @@ export default function MainCard({ user, userId }: MainCardProps) {
             <Button
               onClick={() => {
                 sendNotification({
-                  message: "hai",
+                  message: "this is test notification",
+                  title: "hai",
                   token:
                     "fbW70EiFSKKfkEgP3yJJdV:APA91bHI8uYSXjGFYG2OUNiWBxUaG7ip1IxQStoxd21RisKaCMjteV-9nFkkwxUSXpC79Wp0QTbgeWLcL_9mIK1J2YtqUAsS1slEd3UDx-rHragrmrzLzlILxk8qHr_rvtPuJ9gtTRB0",
                 });
