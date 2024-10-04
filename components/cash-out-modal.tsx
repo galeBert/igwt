@@ -1,3 +1,4 @@
+"use client";
 import { getUserData } from "@/actions/get-user-data";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,8 +43,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { createCashout } from "@/actions/create-money-transfer";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
-import { useUserData } from "@/hooks/useUserData";
-import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   amount: z.number({
@@ -57,7 +56,6 @@ const FormSchema = z.object({
 
 export function CashOutMoneyModal({ userId }: { userId: string }) {
   const [open, setOpen] = useState(false);
-  const { balance, setBalance } = useUserData();
   const { data, mutate } = useSWR(userId, getUserData);
   const { trigger, isMutating } = useSWRMutation(userId, createCashout);
 

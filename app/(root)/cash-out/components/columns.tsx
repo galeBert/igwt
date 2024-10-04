@@ -26,7 +26,7 @@ export const columns: ColumnDef<CashTransactionData>[] = [
       return (
         <Badge
           variant="outline"
-          className={clsx("border-green-600 text-white", {
+          className={clsx("border-green-600 text-black dark:text-white", {
             "border-red-600": row.original.type === "outcome",
           })}
         >

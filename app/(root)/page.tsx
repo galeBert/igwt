@@ -42,8 +42,8 @@ export default async function Home() {
                   src="https://firebasestorage.googleapis.com/v0/b/igwt-3b1a7.appspot.com/o/main-bg-a-purple.png?alt=media&token=521dd959-f53e-4d3c-b92e-53218536d2fc&_gl=1*1i2zkyu*_ga*NTY0Mjc2NzI5LjE2OTU1NjQzNDg.*_ga_CW55HF8NVT*MTY5OTY5MzU4OS42My4xLjE2OTk2OTUzMjEuNDYuMC4w"
                 />
               </div>
-
-              <MainCard user={fUserData} userId={userId ?? ""} />
+              {/* @ts-expect-error Async Server Component */}
+              <MainCard userId={userId ?? ""} />
             </Card>
           </div>
           <div className=" block space-x-3 md:flex md:flex-col lg:flex-row">
