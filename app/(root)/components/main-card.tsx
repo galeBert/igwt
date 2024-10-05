@@ -6,16 +6,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { UserData } from "@/hooks/use-create-transaction";
 import React from "react";
 import Balance from "./balance";
 import CreateTransactionsButton from "./crt-trnsctn-btn";
 
 interface MainCardProps {
   userId: string;
+  userData: UserData;
 }
-export default async function MainCard({ userId }: MainCardProps) {
-  const fUserData = await getUserData(userId ?? "");
-
+export default function MainCard({
+  userId,
+  userData: fUserData,
+}: MainCardProps) {
   return (
     <>
       <CardContent
